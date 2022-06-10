@@ -21,4 +21,8 @@ router.post(
 
 router.post("/login", usersControllers.login);
 
+router.post("/follow/:uid", usersControllers.followUser);
+
+router.post("/unfollow/:uid", usersControllers.unfollowUser);
+
 module.exports = router;

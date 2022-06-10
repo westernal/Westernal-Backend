@@ -150,7 +150,63 @@ const login = async (req, res, next) => {
   });
 };
 
+const followUser = async (req, res, next) => {
+  const { username } = req.body;
+  const userId = req.params.uid;
+
+  let followedUser;
+  let followingUser;
+
+  try {
+    followedUser = await User.findOne({ username: username });
+    followingUser = await User.findById(userId);
+  } catch (error) {
+    const err = new HttpError("following failed!", 500);
+    return next(err);
+  }
+
+  try {
+    followedUser.followers.push(followingUser);
+    followingUser.followings.push(followedUser);
+
+    await followedUser.save();
+    await followingUser.save();
+  } catch (error) {
+    return next(error);
+  }
+  res.status(200).json({ message: "User Followed Successfully!" });
+};
+
+const unfollowUser = async (req, res, next) => {
+  const { username } = req.body;
+  const userId = req.params.uid;
+
+  let unfollowedUser;
+  let unfollowingUser;
+
+  try {
+    unfollowedUser = await User.findOne({ username: username });
+    unfollowingUser = await User.findById(userId);
+  } catch (error) {
+    const err = new HttpError("unfollowing failed!", 500);
+    return next(err);
+  }
+
+  try {
+    unfollowedUser.followers.pop(unfollowingUser);
+    unfollowingUser.followings.pop(unfollowedUser);
+
+    await unfollowedUser.save();
+    await unfollowingUser.save();
+  } catch (error) {
+    return next(error);
+  }
+  res.status(200).json({ message: "User Unfollowed Successfully!" });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.getUserById = getUserById;
+exports.followUser = followUser;
+exports.unfollowUser = unfollowUser;

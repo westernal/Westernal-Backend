@@ -61,11 +61,14 @@ const getPostByUserId = async (req, res, next) => {
 const createPosts = async (req, res, next) => {
   const { title, description, creator } = req.body;
 
+  const postDate = new Date();
+
   const createdPost = new Post({
     title: title,
     description: description,
     creator: creator,
     image: req.file.path,
+    date: postDate,
   });
 
   let user;
