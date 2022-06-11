@@ -3,8 +3,6 @@ const Post = require("../models/posts");
 const User = require("../models/user");
 const upload = require("express-fileupload");
 
-const { validationResult } = require("express-validator");
-
 const getPosts = async (req, res, next) => {
   let posts;
 
@@ -44,9 +42,7 @@ const getPostByUserId = async (req, res, next) => {
 
   try {
     posts = await Post.find({ creator: userId });
-    console.log(posts);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -69,6 +65,7 @@ const createPosts = async (req, res, next) => {
     creator: creator,
     image: req.file.path,
     date: postDate,
+    likes: [],
   });
 
   let user;
@@ -89,7 +86,6 @@ const createPosts = async (req, res, next) => {
     user.posts.push(createdPost);
     await user.save();
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 
@@ -118,8 +114,64 @@ const deletePost = async (req, res, next) => {
   res.json({ message: "Post Deleted!" });
 };
 
+const likePost = async (req, res, next) => {
+  const postId = req.params.pid;
+
+  let post;
+
+  const { userId } = req.body;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+    post = await Post.findById(postId);
+    post.likes.push(user);
+    await post.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!post) {
+    const err = new HttpError("Could not find the post!", 500);
+
+    return next(err);
+  }
+
+  res.json({ message: "Post Liked!" });
+};
+
+const unlikePost = async (req, res, next) => {
+  const postId = req.params.pid;
+
+  let post;
+
+  const { userId } = req.body;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+    post = await Post.findById(postId);
+    post.likes.pop(user);
+    await post.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!post) {
+    const err = new HttpError("Could not find the post!", 500);
+
+    return next(err);
+  }
+
+  res.json({ message: "Post Unliked!" });
+};
+
 exports.getPostById = getPostById;
 exports.getPostByUserId = getPostByUserId;
 exports.createPosts = createPosts;
 exports.deletePost = deletePost;
 exports.getPosts = getPosts;
+exports.likePost = likePost;
+exports.unlikePost = unlikePost;
