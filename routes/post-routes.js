@@ -11,6 +11,8 @@ router.get("/:pid", postControllers.getPostById);
 
 router.get("/user/:uid", postControllers.getPostByUserId);
 
+router.get("/timeline/:uid", postControllers.getTimelinePost);
+
 router.use(checkAuth);
 
 router.post("/", fileUpload.single("image"), postControllers.createPosts);

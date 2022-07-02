@@ -54,6 +54,46 @@ const getPostByUserId = async (req, res, next) => {
   res.json({ posts: posts });
 };
 
+const getTimelinePost = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+  let posts = [];
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+
+  try {
+    for (let i = 0; i < user.followings.length; i++) {
+      posts.push(Post.find({ creator: user.followings[i] }));
+    }
+    posts.sort(function (a, b) {
+      var c = new Date(a.date);
+      var d = new Date(b.date);
+      return c - d;
+    });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("Could not find the user!", 500);
+    return next(err);
+  }
+
+  if (!posts) {
+    const err = new HttpError("Could not find the post!", 500);
+    return next(err);
+  }
+
+  res.json({ posts: posts });
+};
+
 const createPosts = async (req, res, next) => {
   const { title, description, creator } = req.body;
 
@@ -175,3 +215,4 @@ exports.deletePost = deletePost;
 exports.getPosts = getPosts;
 exports.likePost = likePost;
 exports.unlikePost = unlikePost;
+exports.getTimelinePost = getTimelinePost;
