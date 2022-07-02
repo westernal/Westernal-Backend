@@ -69,7 +69,7 @@ const getTimelinePost = async (req, res, next) => {
 
   try {
     for (let i = 0; i < user.followings.length; i++) {
-      posts.push(Post.find({ creator: user.followings[i] }));
+      posts[i] = await Post.findOne({ creator: user.followings[i] });
     }
     posts.sort(function (a, b) {
       var c = new Date(a.date);
