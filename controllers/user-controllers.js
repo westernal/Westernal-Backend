@@ -36,6 +36,54 @@ const getUserById = async (req, res, next) => {
   res.status(200).json({ user: user });
 };
 
+const editUser = async (req, res, next) => {
+  const { username, bio, image, password } = req.body;
+  const userId = req.params.uid;
+
+  let existingUsername;
+  let user;
+
+  try {
+    existingUsername = await User.findOne({ username: username });
+  } catch (error) {
+    return next(error);
+  }
+
+  if (existingUsername) {
+    const err = new HttpError("Username already exist!", 422);
+    return next(err);
+  }
+
+  let hashedPassword;
+
+  try {
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 12);
+    }
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+
+  try {
+    user = User.findByIdAndUpdate(
+      userId,
+      {
+        username: username,
+        bio: bio,
+        image: image,
+        password: hashedPassword,
+      },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -216,3 +264,4 @@ exports.login = login;
 exports.getUserById = getUserById;
 exports.followUser = followUser;
 exports.unfollowUser = unfollowUser;
+exports.editUser = editUser;
