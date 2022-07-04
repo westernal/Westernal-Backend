@@ -48,9 +48,11 @@ const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   let existingUser;
+  let existingUsername;
 
   try {
     existingUser = await User.findOne({ email: email });
+    existingUsername = await User.findOne({ username: username });
   } catch (error) {
     console.log(error);
     return next(error);
@@ -58,6 +60,11 @@ const signup = async (req, res, next) => {
 
   if (existingUser) {
     const err = new HttpError("User already exist!", 422);
+    return next(err);
+  }
+
+  if (existingUsername) {
+    const err = new HttpError("Username already exist!", 422);
     return next(err);
   }
 
