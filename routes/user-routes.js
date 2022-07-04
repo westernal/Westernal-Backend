@@ -16,4 +16,6 @@ router.post("/follow/:uid", usersControllers.followUser);
 
 router.post("/unfollow/:uid", usersControllers.unfollowUser);
 
+router.post("/edit/:uid", usersControllers.editUser);
+
 module.exports = router;
