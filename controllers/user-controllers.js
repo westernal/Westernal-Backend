@@ -37,7 +37,7 @@ const getUserById = async (req, res, next) => {
 };
 
 const editUser = async (req, res, next) => {
-  const { username, bio, image, password } = req.body;
+  const { username, bio, password } = req.body;
   const userId = req.params.uid;
 
   let existingUsername;
@@ -71,7 +71,7 @@ const editUser = async (req, res, next) => {
       {
         username: username,
         bio: bio,
-        image: image,
+        image: req.file.path,
         password: hashedPassword,
       },
       function (err, doc) {
@@ -128,7 +128,6 @@ const signup = async (req, res, next) => {
     username: username,
     email: email,
     password: hashedPassword,
-    image: "req.file.path",
     posts: [],
   });
 
