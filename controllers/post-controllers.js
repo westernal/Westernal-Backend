@@ -129,7 +129,7 @@ const createPosts = async (req, res, next) => {
     return next(err);
   }
 
-  res.status(201).json({ post: createdPost });
+  res.status(201).json({ message: "post created!" });
 };
 
 const deletePost = async (req, res, next) => {
