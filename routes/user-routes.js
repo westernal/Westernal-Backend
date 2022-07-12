@@ -1,5 +1,7 @@
 const express = require("express");
 
+const fileUpload = require("../middleware/file-upload");
+
 const usersControllers = require("../controllers/user-controllers");
 
 const router = express.Router();
@@ -16,6 +18,10 @@ router.post("/follow/:uid", usersControllers.followUser);
 
 router.post("/unfollow/:uid", usersControllers.unfollowUser);
 
-router.post("/edit/:uid", usersControllers.editUser);
+router.post(
+  "/edit/:uid",
+  fileUpload.single("image"),
+  usersControllers.editUser
+);
 
 module.exports = router;
