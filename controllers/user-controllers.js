@@ -41,15 +41,23 @@ const editUser = async (req, res, next) => {
   const userId = req.params.uid;
 
   let existingUsername;
+  let selfUser;
   let user;
+  let image;
+
+  if (req.file) {
+    image = req.file.path;
+  }
 
   try {
     existingUsername = await User.findOne({ username: username });
+    selfUser = await User.findById(userId);
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 
-  if (existingUsername) {
+  if (existingUsername && existingUsername.username !== selfUser.username) {
     const err = new HttpError("Username already exist!", 422);
     return next(err);
   }
@@ -71,15 +79,16 @@ const editUser = async (req, res, next) => {
       {
         username: username,
         bio: bio,
-        image: req.file.path,
+        image: image,
         password: hashedPassword,
       },
       function (err, doc) {
         if (err) return res.send(500, { error: err });
-        return res.send("Succesfully saved.");
+        return res.status(200).json({ message: "edited successfully" });
       }
     );
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
