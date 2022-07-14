@@ -103,7 +103,7 @@ const createPosts = async (req, res, next) => {
     title: title,
     description: description,
     creator: creator,
-    image: req.file.path,
+    song: req.file.path,
     date: postDate,
     likes: [],
   });

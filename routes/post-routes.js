@@ -5,7 +5,7 @@ const router = express.Router();
 
 const postControllers = require("../controllers/post-controllers");
 const checkAuth = require("../middleware/check-auth");
-const fileUpload = require("../middleware/file-upload");
+const songUpload = require("../middleware/song-upload");
 
 router.get("/:pid", postControllers.getPostById);
 
@@ -15,7 +15,7 @@ router.get("/timeline/:uid", postControllers.getTimelinePost);
 
 router.use(checkAuth);
 
-router.post("/", fileUpload.single("image"), postControllers.createPosts);
+router.post("/", songUpload.single("song"), postControllers.createPosts);
 
 router.post("/like/:pid", postControllers.likePost);
 
