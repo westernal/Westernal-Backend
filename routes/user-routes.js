@@ -20,6 +20,8 @@ router.get("/followers/:uid", usersControllers.getUserFollowers);
 
 router.post("/unfollow/:uid", usersControllers.unfollowUser);
 
+router.get("/followings/:uid", usersControllers.getUserFollowings);
+
 router.post(
   "/edit/:uid",
   fileUpload.single("image"),
