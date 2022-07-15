@@ -36,6 +36,34 @@ const getUserById = async (req, res, next) => {
   res.status(200).json({ user: user });
 };
 
+const getUserFollowers = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+  let followers = [];
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("user doesn't exists!", 401);
+    next(err);
+  }
+
+  for (let i = 0; i < user.followers.length; i++) {
+    let follower;
+
+    follower = await User.findById(user.followers[i]);
+
+    followers.push(follower);
+  }
+
+  res.status(200).json({ followers: followers });
+};
+
 const editUser = async (req, res, next) => {
   const { username, bio, password } = req.body;
   const userId = req.params.uid;
@@ -273,3 +301,4 @@ exports.getUserById = getUserById;
 exports.followUser = followUser;
 exports.unfollowUser = unfollowUser;
 exports.editUser = editUser;
+exports.getUserFollowers = getUserFollowers;
