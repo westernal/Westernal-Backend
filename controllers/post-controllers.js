@@ -1,8 +1,7 @@
 const HttpError = require("../models/http-error");
 const Post = require("../models/posts");
 const User = require("../models/user");
-const upload = require("express-fileupload");
-var jsmediatags = require("jsmediatags");
+const fs = require("fs");
 
 const getPosts = async (req, res, next) => {
   let posts;
@@ -145,6 +144,9 @@ const deletePost = async (req, res, next) => {
   }
 
   try {
+    fs.unlink(post.song, (err) => {
+      return next(err);
+    });
     await post.remove();
     post.creator.posts.pull(post);
     await post.creator.save();
