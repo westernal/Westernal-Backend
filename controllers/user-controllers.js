@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
+const fs = require("fs");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -100,17 +101,23 @@ const editUser = async (req, res, next) => {
   let selfUser;
   let user;
   let image;
-
-  if (req.file) {
-    image = req.file.path;
-  }
+  let prevImage;
 
   try {
     existingUsername = await User.findOne({ username: username });
     selfUser = await User.findById(userId);
+    prevImage = await selfUser.image;
   } catch (error) {
     console.log(error);
     return next(error);
+  }
+
+  if (req.file && prevImage) {
+    fs.unlink(prevImage, (err) => {});
+  }
+
+  if (req.file) {
+    image = req.file.path;
   }
 
   if (existingUsername && existingUsername.username !== selfUser.username) {
@@ -139,8 +146,9 @@ const editUser = async (req, res, next) => {
         password: hashedPassword,
       },
       function (err, doc) {
-        if (err) return res.send(500, { error: err });
-        return res.status(200).json({ message: "edited successfully" });
+        if (err) {
+          return res.send(500, { error: err });
+        } else return res.status(200).json({ message: "edited successfully" });
       }
     );
   } catch (error) {
