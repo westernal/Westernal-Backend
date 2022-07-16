@@ -2,6 +2,7 @@ const HttpError = require("../models/http-error");
 const Post = require("../models/posts");
 const User = require("../models/user");
 const upload = require("express-fileupload");
+var jsmediatags = require("jsmediatags");
 
 const getPosts = async (req, res, next) => {
   let posts;
