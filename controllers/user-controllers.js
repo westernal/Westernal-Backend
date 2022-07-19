@@ -112,7 +112,7 @@ const editUser = async (req, res, next) => {
     return next(error);
   }
 
-  if (req.file && prevImage) {
+  if (req.file && prevImage && fs.existsSync(prevImage)) {
     fs.unlink(prevImage, (err) => {});
   }
 
