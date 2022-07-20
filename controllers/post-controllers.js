@@ -71,10 +71,13 @@ const getTimelinePost = async (req, res, next) => {
     for (let i = 0; i < user.followings.length; i++) {
       posts[i] = await Post.findOne({ creator: user.followings[i] });
     }
+    posts[user.followings.length] = await Post.findOne({ creator: userId });
     posts.sort(function (a, b) {
-      var c = new Date(a.date);
-      var d = new Date(b.date);
-      return c - d;
+      if (a !== null && b !== null) {
+        var c = new Date(a.date);
+        var d = new Date(b.date);
+        return c - d;
+      }
     });
   } catch (error) {
     console.log(error);
@@ -90,6 +93,8 @@ const getTimelinePost = async (req, res, next) => {
     const err = new HttpError("Could not find the post!", 500);
     return next(err);
   }
+
+  console.log(posts);
 
   res.json({ posts: posts });
 };
