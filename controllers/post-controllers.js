@@ -146,11 +146,8 @@ const deletePost = async (req, res, next) => {
     return next(error);
   }
 
-  if (fs.existsSync(post.song)) {
-    fs.unlink(post.song, (err) => {});
-  }
-
   try {
+    fs.unlink(post.song, (err) => {});
     await post.remove();
     post.creator.posts.pull(post);
     await post.creator.save();
