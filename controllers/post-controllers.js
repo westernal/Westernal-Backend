@@ -7,14 +7,7 @@ const getPosts = async (req, res, next) => {
   let posts;
 
   try {
-    posts = await Post.find({}, "");
-    posts.sort(function (a, b) {
-      if (a !== null && b !== null) {
-        var c = new Date(a.date);
-        var d = new Date(b.date);
-        return d - c;
-      }
-    });
+    posts = await Post.find({}, "").sort({ date: -1 });
   } catch (error) {
     const err = new HttpError("Getting posts failed!", 500);
     return next(err);
@@ -48,14 +41,7 @@ const getPostByUserId = async (req, res, next) => {
   let posts;
 
   try {
-    posts = await Post.find({ creator: userId });
-    posts.sort(function (a, b) {
-      if (a !== null && b !== null) {
-        var c = new Date(a.date);
-        var d = new Date(b.date);
-        return d - c;
-      }
-    });
+    posts = await Post.find({ creator: userId }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
@@ -83,9 +69,15 @@ const getTimelinePost = async (req, res, next) => {
 
   try {
     for (let i = 0; i < user.followings.length; i++) {
-      posts[i] = await Post.findOne({ creator: user.followings[i] });
+      posts[i] = await Post.findOne({ creator: user.followings[i] }).sort({
+        date: -1,
+      });
     }
-    posts[user.followings.length] = await Post.findOne({ creator: userId });
+
+    posts[user.followings.length] = await Post.findOne({
+      creator: userId,
+    }).sort({ date: -1 });
+
     posts.sort(function (a, b) {
       if (a !== null && b !== null) {
         var c = new Date(a.date);
