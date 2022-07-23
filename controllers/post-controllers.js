@@ -76,7 +76,7 @@ const getTimelinePost = async (req, res, next) => {
       if (a !== null && b !== null) {
         var c = new Date(a.date);
         var d = new Date(b.date);
-        return c - d;
+        return d - c;
       }
     });
   } catch (error) {
