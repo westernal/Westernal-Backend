@@ -8,6 +8,13 @@ const getPosts = async (req, res, next) => {
 
   try {
     posts = await Post.find({}, "");
+    posts.sort(function (a, b) {
+      if (a !== null && b !== null) {
+        var c = new Date(a.date);
+        var d = new Date(b.date);
+        return d - c;
+      }
+    });
   } catch (error) {
     const err = new HttpError("Getting posts failed!", 500);
     return next(err);
@@ -42,6 +49,13 @@ const getPostByUserId = async (req, res, next) => {
 
   try {
     posts = await Post.find({ creator: userId });
+    posts.sort(function (a, b) {
+      if (a !== null && b !== null) {
+        var c = new Date(a.date);
+        var d = new Date(b.date);
+        return d - c;
+      }
+    });
   } catch (error) {
     return next(error);
   }
