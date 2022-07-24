@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const postsRoutes = require("./routes/post-routes");
 const usersRoutes = require("./routes/user-routes");
+const notifRoutes = require("./routes/notif-routes");
 const HttpError = require("./models/http-error");
 
 const app = express();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/notifications", notifRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Not Found", 404);

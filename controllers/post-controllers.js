@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-error");
 const Post = require("../models/posts");
 const User = require("../models/user");
+const Notification = require("../models/notification");
 const fs = require("fs");
 
 const getPosts = async (req, res, next) => {
@@ -186,6 +187,17 @@ const likePost = async (req, res, next) => {
     const err = new HttpError("Could not find the post!", 500);
 
     return next(err);
+  }
+
+  const notification = new Notification({
+    owner: post.creator,
+    message: "@" + user.username + " " + "liked" + " " + post.title + ".",
+  });
+
+  try {
+    await notification.save();
+  } catch (error) {
+    console.log(error);
   }
 
   res.json({ message: "Post Liked!" });
