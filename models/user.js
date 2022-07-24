@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   followings: [{ type: mongoose.Types.ObjectId, required: true, ref: "User" }],
   followers: [{ type: mongoose.Types.ObjectId, required: true, ref: "User" }],
   posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
+  notifications: [{ type: String }],
 });
 
 module.exports = mongoose.model("User", userSchema);

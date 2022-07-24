@@ -330,6 +330,32 @@ const unfollowUser = async (req, res, next) => {
   res.status(200).json({ message: "User Unfollowed Successfully!" });
 };
 
+const getNotifications = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+  let notifications;
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("user doesn't exists!", 401);
+    next(err);
+  }
+
+  try {
+    notifications = user.notificatons;
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ notifications: notifications });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -339,3 +365,4 @@ exports.unfollowUser = unfollowUser;
 exports.editUser = editUser;
 exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
+exports.getNotifications = getNotifications;
