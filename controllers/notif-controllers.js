@@ -7,7 +7,9 @@ const getNotifsByUserId = async (req, res, next) => {
   let notifications;
 
   try {
-    notifications = await Notification.find({ owner: userId }).some(10);
+    notifications = await Notification.find({ owner: userId })
+      .limit(10)
+      .sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
