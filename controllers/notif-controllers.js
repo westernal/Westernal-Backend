@@ -14,11 +14,6 @@ const getNotifsByUserId = async (req, res, next) => {
     return next(error);
   }
 
-  if (!notifications) {
-    const err = new HttpError("user doesn't exists!", 401);
-    next(err);
-  }
-
   res.status(200).json({ notifications: notifications });
 };
 

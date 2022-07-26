@@ -22,7 +22,7 @@ const postComment = async (req, res, next) => {
   }
 
   if (!post) {
-    const error = new HttpError("Post doesn't exist.");
+    const error = new HttpError("Post doesn't exist.", 500);
     next(error);
   }
 
@@ -64,7 +64,7 @@ const deleteComment = async (req, res, next) => {
   }
 
   if (!comment) {
-    const error = new HttpError("Comment doesn't exist.");
+    const error = new HttpError("Comment doesn't exist.", 500);
     next(error);
   }
 
