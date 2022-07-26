@@ -21,6 +21,11 @@ const postComment = async (req, res, next) => {
     next(error);
   }
 
+  if (!post) {
+    const error = new HttpError("Post doesn't exist.");
+    next(error);
+  }
+
   try {
     await postedComment.save();
     post.comments_length++;
@@ -33,7 +38,7 @@ const postComment = async (req, res, next) => {
 };
 
 const getCommentsByPostId = async (req, res, next) => {
-  const postId = req.params.uid;
+  const postId = req.params.pid;
 
   let comments;
 
@@ -51,5 +56,35 @@ const getCommentsByPostId = async (req, res, next) => {
   res.status(200).json({ comments: comments });
 };
 
+const deleteComment = async (req, res, next) => {
+  const commentId = req.params.cid;
+
+  let comment;
+  let post;
+
+  try {
+    comment = await Comment.findById(commentId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    post = await Post.findById(comment.postId);
+  } catch (error) {
+    next(error);
+  }
+
+  try {
+    await comment.remove();
+    post.comments_length--;
+    await post.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  res.json({ message: "Comment Deleted!" });
+};
+
 exports.getCommentsByPostId = getCommentsByPostId;
 exports.postComment = postComment;
+exports.deleteComment = deleteComment;
