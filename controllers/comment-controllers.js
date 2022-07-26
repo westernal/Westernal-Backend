@@ -1,15 +1,28 @@
 const HttpError = require("../models/http-error");
 const Comment = require("../models/comment");
 const Post = require("../models/posts");
+const User = require("../models/user");
 
 const postComment = async (req, res, next) => {
   const { writerId, postId, message } = req.body;
 
   const commentDate = new Date();
   let post;
+  let user;
+
+  try {
+    user = await user.findById(writerId);
+  } catch (error) {
+    next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("User doesn't exist.", 500);
+    next(error);
+  }
 
   const postedComment = new Comment({
-    writerId: writerId,
+    writer: { id: writerId, username: user.username, avatar: user.image },
     postId: postId,
     message: message,
     date: commentDate,
