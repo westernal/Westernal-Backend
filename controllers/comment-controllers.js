@@ -1,10 +1,12 @@
 const HttpError = require("../models/http-error");
 const Comment = require("../models/comment");
+const Post = require("../models/posts");
 
 const postComment = async (req, res, next) => {
   const { writerId, postId, message } = req.body;
 
   const commentDate = new Date();
+  let post;
 
   const postedComment = new Comment({
     writerId: writerId,
@@ -14,7 +16,15 @@ const postComment = async (req, res, next) => {
   });
 
   try {
+    post = await Post.findById(postId);
+  } catch (error) {
+    next(error);
+  }
+
+  try {
     await postedComment.save();
+    post.comments_length++;
+    await post.save();
   } catch (error) {
     next(error);
   }
