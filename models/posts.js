@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema({
   song: { type: String, required: true },
   date: { type: Date, required: true },
   likes: [{ type: mongoose.Types.ObjectId, required: true, ref: "User" }],
+  comments_length: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("Post", postSchema);
