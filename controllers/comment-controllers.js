@@ -48,11 +48,6 @@ const getCommentsByPostId = async (req, res, next) => {
     return next(error);
   }
 
-  if (!comments) {
-    const err = new HttpError("user doesn't exists!", 401);
-    next(err);
-  }
-
   res.status(200).json({ comments: comments });
 };
 
@@ -66,6 +61,11 @@ const deleteComment = async (req, res, next) => {
     comment = await Comment.findById(commentId);
   } catch (error) {
     return next(error);
+  }
+
+  if (!comment) {
+    const error = new HttpError("Comment doesn't exist.");
+    next(error);
   }
 
   try {
