@@ -224,7 +224,6 @@ const unlikePost = async (req, res, next) => {
 
   if (!post) {
     const err = new HttpError("Could not find the post!", 500);
-
     return next(err);
   }
 
