@@ -11,7 +11,7 @@ const postComment = async (req, res, next) => {
   let user;
 
   try {
-    user = await user.findById(writerId);
+    user = await User.findById(writerId);
   } catch (error) {
     next(error);
   }
@@ -56,7 +56,7 @@ const getCommentsByPostId = async (req, res, next) => {
   let comments;
 
   try {
-    comments = await Comment.find({ post: postId }).sort({ date: -1 });
+    comments = await Comment.find({ postId: postId }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
