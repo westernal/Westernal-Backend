@@ -239,20 +239,21 @@ const getPostLikes = async (req, res, next) => {
   try {
     post = await Post.findById(postId);
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 
   if (!post) {
     const err = new HttpError("post doesn't exists!", 401);
-    next(err);
+    return next(err);
   }
 
   for (let i = 0; i < post.likes.length; i++) {
-    let follower;
+    let user;
 
-    follower = await post.findById(post.likes[i]);
+    user = await User.findById(post.likes[i]);
 
-    likes.push(follower);
+    likes.push(user);
   }
 
   res.status(200).json({ likes: likes });
