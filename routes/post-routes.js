@@ -22,6 +22,8 @@ router.post("/like/:pid", postControllers.likePost);
 
 router.post("/unlike/:pid", postControllers.unlikePost);
 
+router.get("/like/:pid", postControllers.getPostLikes);
+
 router.get("/", postControllers.getPosts);
 
 router.delete("/:pid", postControllers.deletePost);

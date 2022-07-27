@@ -230,6 +230,34 @@ const unlikePost = async (req, res, next) => {
   res.json({ message: "Post Unliked!" });
 };
 
+const getPostLikes = async (req, res, next) => {
+  const postId = req.params.pid;
+
+  let post;
+  let likes = [];
+
+  try {
+    post = await Post.findById(postId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!post) {
+    const err = new HttpError("post doesn't exists!", 401);
+    next(err);
+  }
+
+  for (let i = 0; i < post.likes.length; i++) {
+    let follower;
+
+    follower = await post.findById(post.likes[i]);
+
+    likes.push(follower);
+  }
+
+  res.status(200).json({ likes: likes });
+};
+
 exports.getPostById = getPostById;
 exports.getPostByUserId = getPostByUserId;
 exports.createPosts = createPosts;
@@ -238,3 +266,4 @@ exports.getPosts = getPosts;
 exports.likePost = likePost;
 exports.unlikePost = unlikePost;
 exports.getTimelinePost = getTimelinePost;
+exports.getPostLikes = getPostLikes;
