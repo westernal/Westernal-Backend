@@ -293,10 +293,18 @@ const followUser = async (req, res, next) => {
   }
 
   try {
-    followedUser.followers.push(followingUser);
-    followingUser.followings.push(followedUser);
+    const firstIndex = followedUser.followers.indexOf(followingUser._id);
+    if (firstIndex < 0) {
+      followedUser.followers.push(followingUser);
+    }
 
     await followedUser.save();
+
+    const secondIndex = followingUser.followers.indexOf(followingUser._id);
+    if (secondIndex < 0) {
+      followingUser.followings.push(followedUser);
+    }
+
     await followingUser.save();
   } catch (error) {
     return next(error);
@@ -334,8 +342,15 @@ const unfollowUser = async (req, res, next) => {
   }
 
   try {
-    unfollowedUser.followers.pop(unfollowingUser);
-    unfollowingUser.followings.pop(unfollowedUser);
+    const firstIndex = unfollowedUser.followers.indexOf(unfollowingUser._id);
+    if (firstIndex > -1) {
+      unfollowedUser.followers.splice(firstIndex, 1);
+    }
+
+    const secondIndex = unfollowingUser.followings.indexOf(unfollowedUser._id);
+    if (secondIndex > -1) {
+      unfollowingUser.followings.splice(secondIndex, 1);
+    }
 
     await unfollowedUser.save();
     await unfollowingUser.save();
