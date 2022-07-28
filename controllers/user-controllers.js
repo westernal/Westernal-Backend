@@ -300,7 +300,7 @@ const followUser = async (req, res, next) => {
 
     await followedUser.save();
 
-    const secondIndex = followingUser.followers.indexOf(followingUser._id);
+    const secondIndex = followingUser.followings.indexOf(followedUser._id);
     if (secondIndex < 0) {
       followingUser.followings.push(followedUser);
     }
