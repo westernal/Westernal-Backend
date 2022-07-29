@@ -1,6 +1,4 @@
 const express = require("express");
-const fileUpload = require("express-fileupload");
-const { check } = require("express-validator");
 
 const router = express.Router();
 
@@ -16,7 +14,7 @@ router.get("/timeline/:uid", postControllers.getTimelinePost);
 
 router.use(checkAuth);
 
-router.post("/", songUpload.single("song"), postControllers.createPosts);
+router.post("/", postControllers.createPosts);
 
 router.post("/like/:pid", postControllers.likePost);
 
