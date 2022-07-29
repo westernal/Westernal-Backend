@@ -2,6 +2,7 @@ const HttpError = require("../models/http-error");
 const Comment = require("../models/comment");
 const Post = require("../models/posts");
 const User = require("../models/user");
+const Notification = require("../models/notification");
 
 const postComment = async (req, res, next) => {
   const { writerId, postId, message } = req.body;
@@ -39,7 +40,20 @@ const postComment = async (req, res, next) => {
     next(error);
   }
 
+  const notification = new Notification({
+    owner: post.creator,
+    message:
+      "@" +
+      postedComment.writer.username +
+      " " +
+      "commented on" +
+      " " +
+      post.title,
+    date: new Date(),
+  });
+
   try {
+    await notification.save();
     await postedComment.save();
     post.comments_length++;
     await post.save();
@@ -47,7 +61,7 @@ const postComment = async (req, res, next) => {
     next(error);
   }
 
-  res.status(201).json({ message: "comment posted!" });
+  res.status(201).json({ message: "Comment posted!" });
 };
 
 const getCommentsByPostId = async (req, res, next) => {
