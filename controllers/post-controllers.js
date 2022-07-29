@@ -105,7 +105,7 @@ const getTimelinePost = async (req, res, next) => {
 };
 
 const createPosts = async (req, res, next) => {
-  const { title, description, creator } = req.body;
+  const { title, description, creator, song } = req.body;
 
   const postDate = new Date();
 
@@ -113,7 +113,7 @@ const createPosts = async (req, res, next) => {
     title: title,
     description: description,
     creator: creator,
-    song: req.file.path,
+    songUrl: song,
     date: postDate,
     likes: [],
   });
