@@ -174,10 +174,13 @@ const likePost = async (req, res, next) => {
   let user;
 
   try {
+    const index = post.likes.indexOf(userId);
     user = await User.findById(userId);
     post = await Post.findById(postId);
-    post.likes.push(user);
-    await post.save();
+    if (index < 0) {
+      post.likes.push(user);
+      await post.save();
+    }
   } catch (error) {
     return next(error);
   }
