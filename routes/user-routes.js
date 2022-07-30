@@ -20,6 +20,8 @@ router.get("/followers/:uid", usersControllers.getUserFollowers);
 
 router.post("/unfollow/:uid", usersControllers.unfollowUser);
 
+router.post("/verify/:uid", usersControllers.verifyUser);
+
 router.get("/followings/:uid", usersControllers.getUserFollowings);
 
 router.post(

@@ -370,6 +370,27 @@ const unfollowUser = async (req, res, next) => {
   res.status(200).json({ message: "User Unfollowed Successfully!" });
 };
 
+const verifyUser = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    user.verified = true;
+    await user.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ user: user });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -379,3 +400,4 @@ exports.unfollowUser = unfollowUser;
 exports.editUser = editUser;
 exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
+exports.verifyUser = verifyUser;
