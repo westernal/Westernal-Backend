@@ -321,7 +321,8 @@ const followUser = async (req, res, next) => {
 
   const notification = new Notification({
     owner: followedUser._id,
-    message: "@" + followingUser.username + " " + "started following you.",
+    user: { id: followingUser._id, username: followUser.username },
+    message: "started following you",
     date: new Date(),
   });
 

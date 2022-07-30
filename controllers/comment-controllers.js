@@ -42,13 +42,11 @@ const postComment = async (req, res, next) => {
 
   const notification = new Notification({
     owner: post.creator,
-    message:
-      "@" +
-      postedComment.writer.username +
-      " " +
-      "commented on" +
-      " " +
-      post.title,
+    user: {
+      id: postedComment.writer.id,
+      username: postedComment.writer.username,
+    },
+    message: "commented on" + " " + post.title,
     date: new Date(),
   });
 

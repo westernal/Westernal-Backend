@@ -174,9 +174,9 @@ const likePost = async (req, res, next) => {
   let user;
 
   try {
-    const index = post.likes.indexOf(userId);
     user = await User.findById(userId);
     post = await Post.findById(postId);
+    const index = post.likes.indexOf(userId);
     if (index < 0) {
       post.likes.push(user);
       await post.save();
@@ -193,7 +193,8 @@ const likePost = async (req, res, next) => {
 
   const notification = new Notification({
     owner: post.creator,
-    message: "@" + user.username + " " + "liked" + " " + post.title + ".",
+    user: { id: user._id, username: user.username },
+    message: "liked" + " " + post.title,
     date: new Date(),
   });
 
@@ -218,7 +219,12 @@ const unlikePost = async (req, res, next) => {
   try {
     user = await User.findById(userId);
     post = await Post.findById(postId);
-    post.likes.pop(user);
+    const index = post.likes.indexOf(userId);
+    if (index > -1) {
+      post.likes.pop(user);
+      await post.save();
+    }
+
     await post.save();
   } catch (error) {
     return next(error);

@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const notifSchema = new mongoose.Schema({
   owner: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  user: {
+    id: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+    username: { type: String, required: true },
+  },
   message: { type: String, required: true },
   date: { type: Date, required: true },
 });
