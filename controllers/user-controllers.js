@@ -300,16 +300,21 @@ const followUser = async (req, res, next) => {
     return next(err);
   }
 
+  if (followUser !== followingUser) {
+    const error = new HttpError("You can't follow yourself", 500);
+    return next(error);
+  }
+
   try {
     const firstIndex = followedUser.followers.indexOf(followingUser._id);
-    if (firstIndex < 0) {
+    if (firstIndex < 0 && followUser !== followingUser) {
       followedUser.followers.push(followingUser);
     }
 
     await followedUser.save();
 
     const secondIndex = followingUser.followings.indexOf(followedUser._id);
-    if (secondIndex < 0) {
+    if (secondIndex < 0 && followUser !== followingUser) {
       followingUser.followings.push(followedUser);
     }
 
