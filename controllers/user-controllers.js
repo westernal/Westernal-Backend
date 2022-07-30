@@ -170,9 +170,12 @@ const signup = async (req, res, next) => {
 
   let existingUser;
   let existingUsername;
+  let admin;
+  let followers = [];
 
   try {
     existingUser = await User.findOne({ email: email });
+    admin = await User.findOne({ username: "westernal" });
     existingUsername = await User.findOne({ username: username });
   } catch (error) {
     console.log(error);
@@ -198,11 +201,16 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
+  if (admin) {
+    followers.push(admin._id);
+  }
+
   const createdUser = new User({
     username: username,
     email: email,
     password: hashedPassword,
     posts: [],
+    followers: followers,
   });
 
   let token;
