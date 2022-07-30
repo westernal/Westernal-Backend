@@ -171,7 +171,7 @@ const signup = async (req, res, next) => {
   let existingUser;
   let existingUsername;
   let admin;
-  let followers = [];
+  let followings = [];
 
   try {
     existingUser = await User.findOne({ email: email });
@@ -201,16 +201,12 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  if (admin) {
-    followers.push(admin._id);
-  }
-
   const createdUser = new User({
     username: username,
     email: email,
     password: hashedPassword,
     posts: [],
-    followers: followers,
+    bio: "Change your information from setting",
   });
 
   let token;
