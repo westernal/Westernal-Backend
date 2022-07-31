@@ -64,18 +64,17 @@ const getTimelinePost = async (req, res, next) => {
   try {
     user = await User.findById(userId);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
   try {
-    for (let i = 0; i < user.followings.length; i++) {
+    for (let i = 1; i < user.followings.length + 1; i++) {
       posts[i] = await Post.findOne({ creator: user.followings[i] }).sort({
         date: -1,
       });
     }
 
-    posts[user.followings.length] = await Post.findOne({
+    posts[0] = await Post.findOne({
       creator: userId,
     }).sort({ date: -1 });
 
@@ -87,7 +86,6 @@ const getTimelinePost = async (req, res, next) => {
       }
     });
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -200,9 +198,7 @@ const likePost = async (req, res, next) => {
 
   try {
     await notification.save();
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 
   res.json({ message: "Post Liked!" });
 };
@@ -247,7 +243,6 @@ const getPostLikes = async (req, res, next) => {
   try {
     post = await Post.findById(postId);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 

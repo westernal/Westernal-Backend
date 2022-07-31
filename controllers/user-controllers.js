@@ -109,7 +109,6 @@ const editUser = async (req, res, next) => {
     selfUser = await User.findById(userId);
     prevImage = await selfUser.image;
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -133,7 +132,6 @@ const editUser = async (req, res, next) => {
       hashedPassword = await bcrypt.hash(password, 12);
     }
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -153,7 +151,6 @@ const editUser = async (req, res, next) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 };
@@ -178,7 +175,6 @@ const signup = async (req, res, next) => {
     admin = await User.findOne({ username: "westernal" });
     existingUsername = await User.findOne({ username: username });
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -197,7 +193,6 @@ const signup = async (req, res, next) => {
   try {
     hashedPassword = await bcrypt.hash(password, 12);
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -217,14 +212,12 @@ const signup = async (req, res, next) => {
       "secret_key"
     );
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
   try {
     await createdUser.save();
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
@@ -329,7 +322,6 @@ const followUser = async (req, res, next) => {
   try {
     await notification.save();
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 
