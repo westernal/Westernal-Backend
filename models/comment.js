@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema({
   postId: { type: mongoose.Types.ObjectId, required: true, ref: "Post" },
   message: { type: String, required: true },
   date: { type: Date, required: true },
+  replies: [{ type: mongoose.Types.ObjectId, required: true, ref: "Comment" }],
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

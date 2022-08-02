@@ -135,6 +135,14 @@ const editUser = async (req, res, next) => {
     return next(error);
   }
 
+  let token;
+
+  try {
+    token = jwt.sign({ userId: userId, username: username }, "secret_key");
+  } catch (error) {
+    return next(error);
+  }
+
   try {
     user = User.findByIdAndUpdate(
       userId,
@@ -147,7 +155,7 @@ const editUser = async (req, res, next) => {
       function (err, doc) {
         if (err) {
           return res.send(500, { error: err });
-        } else return res.status(200).json({ message: "edited successfully" });
+        } else return res.status(200).json({ token: token });
       }
     );
   } catch (error) {
@@ -159,7 +167,6 @@ const signup = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(errors);
     throw new HttpError("user already exists!", 422);
   }
 
@@ -167,12 +174,9 @@ const signup = async (req, res, next) => {
 
   let existingUser;
   let existingUsername;
-  let admin;
-  let followings = [];
 
   try {
     existingUser = await User.findOne({ email: email });
-    admin = await User.findOne({ username: "westernal" });
     existingUsername = await User.findOne({ username: username });
   } catch (error) {
     return next(error);
