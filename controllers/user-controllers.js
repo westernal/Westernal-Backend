@@ -293,7 +293,7 @@ const followUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (followedUser === followingUser) {
+  if (followedUser._id == followingUser._id) {
     const error = new HttpError("You can't follow yourself", 500);
     return next(error);
   }
@@ -348,12 +348,12 @@ const unfollowUser = async (req, res, next) => {
   }
 
   try {
-    const firstIndex = unfollowedUser.followers.indexOf(unfollowingUser._id);
+    let firstIndex = unfollowedUser.followers.indexOf(unfollowingUser._id);
     if (firstIndex > -1) {
       unfollowedUser.followers.splice(firstIndex, 1);
     }
 
-    const secondIndex = unfollowingUser.followings.indexOf(unfollowedUser._id);
+    let secondIndex = unfollowingUser.followings.indexOf(unfollowedUser._id);
     if (secondIndex > -1) {
       unfollowingUser.followings.splice(secondIndex, 1);
     }
@@ -361,7 +361,8 @@ const unfollowUser = async (req, res, next) => {
     await unfollowedUser.save();
     await unfollowingUser.save();
   } catch (error) {
-    return next(error);
+    const err = new HttpError("unfollowing failed!", 500);
+    return next(err);
   }
   res.status(200).json({ message: "User Unfollowed Successfully!" });
 };
