@@ -19,7 +19,7 @@ const postComment = async (req, res, next) => {
 
   if (!user) {
     const error = new HttpError("User doesn't exist.", 500);
-    next(error);
+    return next(error);
   }
 
   const postedComment = new Comment({
@@ -32,12 +32,12 @@ const postComment = async (req, res, next) => {
   try {
     post = await Post.findById(postId);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 
   if (!post) {
     const error = new HttpError("Post doesn't exist.", 500);
-    next(error);
+    return next(error);
   }
 
   const notification = new Notification({
@@ -56,7 +56,7 @@ const postComment = async (req, res, next) => {
     post.comments_length++;
     await post.save();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 
   res.status(201).json({ message: "Comment posted!" });
@@ -90,13 +90,13 @@ const deleteComment = async (req, res, next) => {
 
   if (!comment) {
     const error = new HttpError("Comment doesn't exist.", 500);
-    next(error);
+    return next(error);
   }
 
   try {
     post = await Post.findById(comment.postId);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 
   try {

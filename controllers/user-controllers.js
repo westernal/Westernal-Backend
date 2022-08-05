@@ -32,7 +32,7 @@ const getUserById = async (req, res, next) => {
 
   if (!user) {
     const err = new HttpError("user doesn't exists!", 401);
-    next(err);
+    return next(err);
   }
 
   res.status(200).json({ user: user });
@@ -52,7 +52,7 @@ const getUserFollowers = async (req, res, next) => {
 
   if (!user) {
     const err = new HttpError("user doesn't exists!", 401);
-    next(err);
+    return next(err);
   }
 
   for (let i = 0; i < user.followers.length; i++) {
@@ -80,7 +80,7 @@ const getUserFollowings = async (req, res, next) => {
 
   if (!user) {
     const err = new HttpError("user doesn't exists!", 401);
-    next(err);
+    return next(err);
   }
 
   for (let i = 0; i < user.followings.length; i++) {
