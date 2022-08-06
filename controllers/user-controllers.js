@@ -293,7 +293,7 @@ const followUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (followedUser._id == followingUser._id) {
+  if (followedUser._id === followingUser._id) {
     const error = new HttpError("You can't follow yourself", 500);
     return next(error);
   }
@@ -345,6 +345,11 @@ const unfollowUser = async (req, res, next) => {
   } catch (error) {
     const err = new HttpError("unfollowing failed!", 500);
     return next(err);
+  }
+
+  if (unfollowedUser._id === unfollowingUser._id) {
+    const error = new HttpError("You can't follow yourself", 500);
+    return next(error);
   }
 
   try {

@@ -179,6 +179,11 @@ const likePost = async (req, res, next) => {
   try {
     user = await User.findById(userId);
     post = await Post.findById(postId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
     const index = post.likes.indexOf(userId);
     if (index < 0) {
       post.likes.push(user);
@@ -220,13 +225,16 @@ const unlikePost = async (req, res, next) => {
   try {
     user = await User.findById(userId);
     post = await Post.findById(postId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
     const index = post.likes.indexOf(userId);
     if (index > -1) {
-      post.likes.pop(user);
+      post.likes.splice(index, 1);
       await post.save();
     }
-
-    await post.save();
   } catch (error) {
     return next(error);
   }
