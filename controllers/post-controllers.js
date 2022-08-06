@@ -59,7 +59,8 @@ const getTimelinePost = async (req, res, next) => {
   const userId = req.params.uid;
 
   let user;
-  let posts = [];
+  let users;
+  let posts;
 
   try {
     user = await User.findById(userId);
@@ -67,37 +68,48 @@ const getTimelinePost = async (req, res, next) => {
     return next(error);
   }
 
-  try {
-    for (let i = 0; i < user.followings.length; i++) {
-      let post = await Post.findOne({ creator: user.followings[i] }).sort({
-        date: -1,
-      });
-      if (post) {
-        posts.push(post);
-      }
-    }
-
-    let post = await Post.findOne({
-      creator: userId,
-    }).sort({ date: -1 });
-
-    if (post) {
-      posts.push(post);
-    }
-  } catch (error) {
-    return next(error);
-  }
-
-  posts.sort(function (a, b) {
-    if (a !== null && b !== null) {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    }
-  });
-
   if (!user) {
     const err = new HttpError("Could not find the user!", 500);
     return next(err);
   }
+
+  users = user.followings;
+  users.push(userId);
+
+  try {
+    posts = await Post.find({ creator: { $in: users } })
+      .limit(10)
+      .sort({ date: -1 });
+  } catch (error) {
+    return next(error);
+  }
+
+  // try {
+  //   for (let i = 0; i < user.followings.length; i++) {
+  //     let post = await Post.findOne({ creator: user.followings[i] }).sort({
+  //       date: -1,
+  //     });
+  //     if (post) {
+  //       posts.push(post);
+  //     }
+  //   }
+
+  //   let post = await Post.findOne({
+  //     creator: userId,
+  //   }).sort({ date: -1 });
+
+  //   if (post) {
+  //     posts.push(post);
+  //   }
+  // } catch (error) {
+  //   return next(error);
+  // }
+
+  // posts.sort(function (a, b) {
+  //   if (a !== null && b !== null) {
+  //     return new Date(b.date).getTime() - new Date(a.date).getTime();
+  //   }
+  // });
 
   if (!posts) {
     const err = new HttpError("Could not find the post!", 500);
