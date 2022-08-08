@@ -14,6 +14,8 @@ router.post("/signup", usersControllers.signup);
 
 router.post("/login", usersControllers.login);
 
+router.post("/login/google", usersControllers.googleLogin);
+
 router.post("/follow/:uid", usersControllers.followUser);
 
 router.get("/followers/:uid", usersControllers.getUserFollowers);
