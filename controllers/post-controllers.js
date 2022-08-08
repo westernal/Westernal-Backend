@@ -2,7 +2,7 @@ const HttpError = require("../models/http-error");
 const Post = require("../models/posts");
 const User = require("../models/user");
 const Notification = require("../models/notification");
-const fs = require("fs");
+var validUrl = require("valid-url");
 
 const getPosts = async (req, res, next) => {
   let posts;
@@ -123,6 +123,11 @@ const createPosts = async (req, res, next) => {
   const { title, description, creator, song } = req.body;
 
   const postDate = new Date();
+
+  if (!validUrl.isUri(song)) {
+    const error = new HttpError("URL is not valid!", 422);
+    return next(error);
+  }
 
   const createdPost = new Post({
     title: title,
