@@ -22,7 +22,8 @@
     "mongoose": "^6.2.7",
     "multer": "^1.4.4",
     "multiparty": "^4.2.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
