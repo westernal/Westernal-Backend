@@ -278,6 +278,41 @@ const login = async (req, res, next) => {
   });
 };
 
+const googleLogin = async (req, res, next) => {
+  const { email } = req.body;
+
+  let existingUser;
+
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (error) {
+    const err = new HttpError("login failed!", 500);
+    return next(err);
+  }
+
+  if (!existingUser) {
+    const err = new HttpError("User doesn't exists!", 401);
+    return next(err);
+  }
+
+  let token;
+
+  try {
+    token = jwt.sign(
+      { userId: existingUser.id, username: existingUser.username },
+      "secret_key"
+    );
+  } catch (error) {
+    return next(error);
+  }
+
+  res.json({
+    userId: existingUser.id,
+    email: existingUser.email,
+    token: token,
+  });
+};
+
 const followUser = async (req, res, next) => {
   const { username } = req.body;
   const userId = req.params.uid;
@@ -403,3 +438,4 @@ exports.editUser = editUser;
 exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
 exports.verifyUser = verifyUser;
+exports.googleLogin = googleLogin;
