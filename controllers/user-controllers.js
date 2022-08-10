@@ -274,6 +274,7 @@ const login = async (req, res, next) => {
   res.json({
     userId: existingUser.id,
     email: existingUser.email,
+    username: existingUser.username,
     token: token,
   });
 };
@@ -309,6 +310,7 @@ const googleLogin = async (req, res, next) => {
   res.json({
     userId: existingUser.id,
     email: existingUser.email,
+    username: existingUser.username,
     token: token,
   });
 };
