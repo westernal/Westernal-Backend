@@ -4,7 +4,6 @@ const router = express.Router();
 
 const postControllers = require("../controllers/post-controllers");
 const checkAuth = require("../middleware/check-auth");
-const songUpload = require("../middleware/song-upload");
 
 router.get("/:pid", postControllers.getPostById);
 

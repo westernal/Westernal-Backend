@@ -143,6 +143,10 @@ const editUser = async (req, res, next) => {
     return next(error);
   }
 
+  const options = {
+    httpOnly: true,
+  };
+
   try {
     user = User.findByIdAndUpdate(
       userId,
@@ -155,7 +159,11 @@ const editUser = async (req, res, next) => {
       function (err, doc) {
         if (err) {
           return res.send(500, { error: err });
-        } else return res.status(200).json({ token: token });
+        } else
+          return res
+            .cookie("token", token, options)
+            .status(200)
+            .json({ token: token });
       }
     );
   } catch (error) {
@@ -225,7 +233,12 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
+  const options = {
+    httpOnly: true,
+  };
+
   res
+    .cookie("token", token, options)
     .status(201)
     .json({ userId: createdUser.id, email: createdUser.email, token: token });
 };
@@ -270,8 +283,11 @@ const login = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
+  const options = {
+    httpOnly: true,
+  };
 
-  res.json({
+  res.cookie("token", token, options).json({
     userId: existingUser.id,
     email: existingUser.email,
     username: existingUser.username,
@@ -307,7 +323,11 @@ const googleLogin = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({
+  const options = {
+    httpOnly: true,
+  };
+
+  res.cookie("token", token, options).json({
     userId: existingUser.id,
     email: existingUser.email,
     username: existingUser.username,
