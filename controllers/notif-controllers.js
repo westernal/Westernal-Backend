@@ -17,4 +17,19 @@ const getNotifsByUserId = async (req, res, next) => {
   res.status(200).json({ notifications: notifications });
 };
 
+const getNotifsLengthByUserId = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let size;
+
+  try {
+    size = await Notification.count({ owner: userId });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ size: size });
+};
+
 exports.getNotifsByUserId = getNotifsByUserId;
+exports.getNotifsLengthByUserId = getNotifsLengthByUserId;
