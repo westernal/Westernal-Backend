@@ -10,6 +10,7 @@ const commentSchema = new mongoose.Schema({
   message: { type: String, required: true },
   date: { type: Date, required: true },
   replies: [{ type: mongoose.Types.ObjectId, required: true, ref: "Comment" }],
+  type: { type: String, default: "comment" },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

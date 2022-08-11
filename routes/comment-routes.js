@@ -10,4 +10,8 @@ router.post("/", commentController.postComment);
 
 router.delete("/:cid", commentController.deleteComment);
 
+router.post("/replies", commentController.postReply);
+
+router.get("/replies/:cid", commentController.getRepliesByCommentId);
+
 module.exports = router;
