@@ -3,6 +3,7 @@ const express = require("express");
 const fileUpload = require("../middleware/file-upload");
 
 const usersControllers = require("../controllers/user-controllers");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
@@ -16,19 +17,19 @@ router.post("/login", usersControllers.login);
 
 router.post("/login/google", usersControllers.googleLogin);
 
-router.post("/follow/:uid", usersControllers.followUser);
+router.post("/follow/:uid", checkAuth, usersControllers.followUser);
 
 router.get("/followers/:uid", usersControllers.getUserFollowers);
 
-router.post("/unfollow/:uid", usersControllers.unfollowUser);
+router.post("/unfollow/:uid", checkAuth, usersControllers.unfollowUser);
 
-router.post("/verify/:uid", usersControllers.verifyUser);
+router.post("/verify/:uid", checkAuth, usersControllers.verifyUser);
 
 router.get("/followings/:uid", usersControllers.getUserFollowings);
 
 router.post(
   "/edit/:uid",
-  fileUpload.single("image"),
+  [fileUpload.single("image"), checkAuth],
   usersControllers.editUser
 );
 
