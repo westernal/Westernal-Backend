@@ -126,6 +126,7 @@ const postReply = async (req, res, next) => {
     await postedComment.save();
     comment.replies.push(postedComment._id);
     post.comments_length++;
+    await comment.save();
     await post.save();
   } catch (error) {
     return next(error);
@@ -140,7 +141,12 @@ const getCommentsByPostId = async (req, res, next) => {
   let comments;
 
   try {
-    comments = await Comment.find({ postId: postId }).sort({ date: -1 });
+    comments = await Comment.find({
+      postId: postId,
+      type: { $nin: ["reply"] },
+    }).sort({
+      date: -1,
+    });
   } catch (error) {
     return next(error);
   }
@@ -166,7 +172,7 @@ const getRepliesByCommentId = async (req, res, next) => {
   }
 
   try {
-    replies = await Comment.find({ replies: { $in: comment.replies } }).sort({
+    replies = await Comment.find({ _id: { $in: comment.replies } }).sort({
       date: -1,
     });
   } catch (error) {
