@@ -112,7 +112,7 @@ const postReply = async (req, res, next) => {
   }
 
   const notification = new Notification({
-    owner: post.creator,
+    owner: comment.writer.id,
     user: {
       id: postedComment.writer.id,
       username: postedComment.writer.username,
