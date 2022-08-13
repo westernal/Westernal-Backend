@@ -200,6 +200,12 @@ const deleteComment = async (req, res, next) => {
   }
 
   try {
+    await Comment.remove({ _id: { $in: comment.replies } });
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
     post = await Post.findById(comment.postId);
   } catch (error) {
     return next(error);
@@ -207,7 +213,7 @@ const deleteComment = async (req, res, next) => {
 
   try {
     await comment.remove();
-    post.comments_length--;
+    post.comments_length = post.comments_length - (comment.replies.length + 1);
     await post.save();
   } catch (error) {
     return next(error);
