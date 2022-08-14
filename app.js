@@ -52,7 +52,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect("mongodb://alinavid_ali:13791379al@localhost:27017/westernal")
+  .connect("")
   .then(() => {
     app.listen(5000);
   })
