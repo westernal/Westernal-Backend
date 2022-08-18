@@ -100,7 +100,6 @@ const editUser = async (req, res, next) => {
 
   let existingUsername;
   let selfUser;
-  let user;
   let image;
   let prevImage;
 
@@ -237,10 +236,7 @@ const signup = async (req, res, next) => {
     httpOnly: true,
   };
 
-  res
-    .cookie("token", token, options)
-    .status(201)
-    .json({ userId: createdUser.id, email: createdUser.email, token: token });
+  res.cookie("token", token, options).status(201).json({ token: token });
 };
 
 const login = async (req, res, next) => {
@@ -288,9 +284,6 @@ const login = async (req, res, next) => {
   };
 
   res.cookie("token", token, options).json({
-    userId: existingUser.id,
-    email: existingUser.email,
-    username: existingUser.username,
     token: token,
   });
 };
@@ -328,9 +321,6 @@ const googleLogin = async (req, res, next) => {
   };
 
   res.cookie("token", token, options).json({
-    userId: existingUser.id,
-    email: existingUser.email,
-    username: existingUser.username,
     token: token,
   });
 };
@@ -376,7 +366,7 @@ const followUser = async (req, res, next) => {
   const notification = new Notification({
     owner: followedUser._id,
     user: { id: followingUser._id, username: followingUser.username },
-    message: "started following you",
+    message: "started following you.",
     date: new Date(),
   });
 
@@ -423,7 +413,7 @@ const unfollowUser = async (req, res, next) => {
     await unfollowedUser.save();
     await unfollowingUser.save();
   } catch (error) {
-    const err = new HttpError("unfollowing failed!", 500);
+    const err = new HttpError("Unfollowing failed!", 500);
     return next(err);
   }
   res.status(200).json({ message: "User Unfollowed Successfully!" });
