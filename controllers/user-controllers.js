@@ -39,13 +39,13 @@ const getUserById = async (req, res, next) => {
 };
 
 const getUserFollowers = async (req, res, next) => {
-  const userId = req.params.uid;
+  const username = req.params.uname;
 
   let user;
   let followers = [];
 
   try {
-    user = await User.findById(userId);
+    user = await User.find({ username: username });
   } catch (error) {
     return next(error);
   }
