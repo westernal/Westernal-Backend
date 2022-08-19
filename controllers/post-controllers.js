@@ -54,7 +54,7 @@ const getPostByUsername = async (req, res, next) => {
   }
 
   try {
-    posts = await Post.find({ creator: user._id }).sort({ date: -1 });
+    posts = await Post.find({ creator: user[0]._id }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
