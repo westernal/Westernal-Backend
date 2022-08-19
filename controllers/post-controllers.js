@@ -36,13 +36,25 @@ const getPostById = async (req, res, next) => {
   res.json({ post: post.toObject({ getters: true }) });
 };
 
-const getPostByUserId = async (req, res, next) => {
-  const userId = req.params.uid;
+const getPostByUsername = async (req, res, next) => {
+  const username = req.params.uname;
 
   let posts;
+  let user;
 
   try {
-    posts = await Post.find({ creator: userId }).sort({ date: -1 });
+    user = await User.find({ username: username });
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("Could not find user!", 500);
+    return next(err);
+  }
+
+  try {
+    posts = await Post.find({ creator: user._id }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
@@ -52,7 +64,7 @@ const getPostByUserId = async (req, res, next) => {
     return next(err);
   }
 
-  res.json({ posts: posts });
+  res.json({ posts: posts, creator: user });
 };
 
 const getTimelinePost = async (req, res, next) => {
@@ -266,7 +278,7 @@ const getPostLikes = async (req, res, next) => {
 };
 
 exports.getPostById = getPostById;
-exports.getPostByUserId = getPostByUserId;
+exports.getPostByUsername = getPostByUsername;
 exports.createPosts = createPosts;
 exports.deletePost = deletePost;
 exports.getPosts = getPosts;
