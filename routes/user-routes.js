@@ -19,13 +19,13 @@ router.post("/login/google", usersControllers.googleLogin);
 
 router.post("/follow/:uid", checkAuth, usersControllers.followUser);
 
-router.get("/followers/:uid", usersControllers.getUserFollowers);
+router.get("/followers/:uname", usersControllers.getUserFollowers);
 
 router.post("/unfollow/:uid", checkAuth, usersControllers.unfollowUser);
 
 router.post("/verify/:uid", checkAuth, usersControllers.verifyUser);
 
-router.get("/followings/:uid", usersControllers.getUserFollowings);
+router.get("/following/:uname", usersControllers.getUserFollowings);
 
 router.post(
   "/edit/:uid",
