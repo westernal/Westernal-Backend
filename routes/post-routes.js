@@ -7,7 +7,7 @@ const checkAuth = require("../middleware/check-auth");
 
 router.get("/:pid", postControllers.getPostById);
 
-router.get("/user/:uid", postControllers.getPostByUserId);
+router.get("/user/:uname", postControllers.getPostByUsername);
 
 router.get("/timeline/:uid", postControllers.getTimelinePost);
 
