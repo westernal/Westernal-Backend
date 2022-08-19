@@ -42,7 +42,7 @@ const getUserFollowers = async (req, res, next) => {
   const username = req.params.uname;
 
   let user;
-  let followers = [];
+  let followers;
 
   try {
     user = await User.find({ username: username });
@@ -55,25 +55,23 @@ const getUserFollowers = async (req, res, next) => {
     return next(err);
   }
 
-  for (let i = 0; i < user.followers.length; i++) {
-    let follower;
-
-    follower = await User.findById(user.followers[i]);
-
-    followers.push(follower);
+  try {
+    followers = await User.find({ _id: { $in: user[0].followers } });
+  } catch (error) {
+    return next(error);
   }
 
   res.status(200).json({ followers: followers });
 };
 
 const getUserFollowings = async (req, res, next) => {
-  const userId = req.params.uid;
+  const username = req.params.uname;
 
   let user;
-  let followings = [];
+  let following;
 
   try {
-    user = await User.findById(userId);
+    user = await User.find({ username: username });
   } catch (error) {
     return next(error);
   }
@@ -83,15 +81,13 @@ const getUserFollowings = async (req, res, next) => {
     return next(err);
   }
 
-  for (let i = 0; i < user.followings.length; i++) {
-    let following;
-
-    following = await User.findById(user.followings[i]);
-
-    followings.push(following);
+  try {
+    following = await User.find({ _id: { $in: user[0].followings } });
+  } catch (error) {
+    return next(error);
   }
 
-  res.status(200).json({ followings: followings });
+  res.status(200).json({ following: following });
 };
 
 const editUser = async (req, res, next) => {
