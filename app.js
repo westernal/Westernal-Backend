@@ -12,6 +12,7 @@ const usersRoutes = require("./routes/user-routes");
 const notifRoutes = require("./routes/notif-routes");
 const commentRoutes = require("./routes/comment-routes");
 const HttpError = require("./models/http-error");
+const passwords = require("./security");
 
 const app = express();
 
@@ -52,7 +53,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect("")
+  .connect("mongodb://0.0.0.0:27017/mern")
   .then(() => {
     app.listen(5000);
   })

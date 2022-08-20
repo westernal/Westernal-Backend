@@ -27,6 +27,8 @@ router.post("/verify/:uid", checkAuth, usersControllers.verifyUser);
 
 router.get("/following/:uname", usersControllers.getUserFollowings);
 
+router.post("/reset-password", usersControllers.resetPassword);
+
 router.post(
   "/edit/:uid",
   [fileUpload.single("image"), checkAuth],

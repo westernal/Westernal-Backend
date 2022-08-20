@@ -5,6 +5,8 @@ const HttpError = require("../models/http-error");
 const User = require("../models/user");
 const Notification = require("../models/notification");
 const fs = require("fs");
+var nodemailer = require("nodemailer");
+const passwords = require("../security");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -284,6 +286,61 @@ const login = async (req, res, next) => {
   });
 };
 
+const resetPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  let user;
+
+  try {
+    user = await User.findOne({ email: email });
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("User with this email doesn't exists!", 401);
+    return next(err);
+  }
+
+  try {
+    var transporter = nodemailer.createTransport({
+      host: "sahand.pws-dns.net",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "support.westernal@alinavidi.ir",
+        pass: passwords.emailPassword,
+      },
+      debug: false,
+      logger: true,
+    });
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    var mailOptions = {
+      from: "support.westernal@alinavidi.ir",
+      to: email,
+      subject: "Reset your Westernal password",
+      text:
+        "Please click this link to reset your password: https://social-media-westernal.vercel.app/forgot-password/" +
+        user._id,
+    };
+  } catch (error) {
+    return next(error);
+  }
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      const err = new HttpError("Sending email failed!", 401);
+      return next(err);
+    } else {
+      res.status(200).json({ message: "Email sent." });
+    }
+  });
+};
+
 const googleLogin = async (req, res, next) => {
   const { email } = req.body;
 
@@ -345,6 +402,9 @@ const followUser = async (req, res, next) => {
     const firstIndex = followedUser.followers.indexOf(followingUser._id);
     if (firstIndex < 0) {
       followedUser.followers.push(followingUser);
+    } else {
+      const error = new HttpError("You already follow this user!");
+      return next(error);
     }
 
     await followedUser.save();
@@ -352,6 +412,9 @@ const followUser = async (req, res, next) => {
     const secondIndex = followingUser.followings.indexOf(followedUser._id);
     if (secondIndex < 0) {
       followingUser.followings.push(followedUser);
+    } else {
+      const error = new HttpError("You already follow this user!");
+      return next(error);
     }
 
     await followingUser.save();
@@ -399,11 +462,17 @@ const unfollowUser = async (req, res, next) => {
     let firstIndex = unfollowedUser.followers.indexOf(unfollowingUser._id);
     if (firstIndex > -1) {
       unfollowedUser.followers.splice(firstIndex, 1);
+    } else {
+      const error = new HttpError("You don't follow this user!");
+      return next(error);
     }
 
     let secondIndex = unfollowingUser.followings.indexOf(unfollowedUser._id);
     if (secondIndex > -1) {
       unfollowingUser.followings.splice(secondIndex, 1);
+    } else {
+      const error = new HttpError("You don't follow this user!");
+      return next(error);
     }
 
     await unfollowedUser.save();
@@ -447,3 +516,4 @@ exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
 exports.verifyUser = verifyUser;
 exports.googleLogin = googleLogin;
+exports.resetPassword = resetPassword;
