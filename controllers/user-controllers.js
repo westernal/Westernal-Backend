@@ -359,9 +359,17 @@ const resetPassword = async (req, res, next) => {
       from: "support.westernal@alinavidi.ir",
       to: email,
       subject: "Reset your Westernal password",
-      text:
-        "Please click this link to reset your password: https://social-media-westernal.vercel.app/forgot-password/" +
-        user._id,
+      html: ` <div class="email" style="width: 100%; height:100%; text-align: center;">
+      <div class="email-body" style="text-align: center; border-radius: 10px; width: 70vw; margin: 10px; padding: 0 30px 20px 30px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    ">
+          <img src="https://i.postimg.cc/rp8nKrZD/logo.png" alt="Westernal's logo" style="width: 150px; height:150px;">
+          <p style="font-size: 18px; margin-bottom: 50px;">Please click the link below in order to reset your password:</p>
+          <a href="https://social-media-westernal.vercel.app/forgot-password/${user._id}"         
+        style="background-color: #9d38fc; padding:10px; border-radius: 10px; border:none; text-decoration: none; color: white;">Reset password</a>
+          <div style="margin-top: 50px;"><p>Not you? please contact us via <a href="mailto:ali_navidi24@yahoo.com">email</a></p></div>
+      </div>
+      <p style="opacity: 0.7; font-size: 14px;">Westernal - Let the songs talk</p>
+  </div>`,
     };
   } catch (error) {
     return next(error);
