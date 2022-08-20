@@ -334,7 +334,7 @@ const resetPassword = async (req, res, next) => {
   }
 
   if (!user) {
-    const err = new HttpError("User with this email doesn't exists!", 401);
+    const err = new HttpError("User with this email doesn't exist!", 401);
     return next(err);
   }
 
