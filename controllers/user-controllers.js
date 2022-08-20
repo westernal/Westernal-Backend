@@ -47,7 +47,7 @@ const getUserFollowers = async (req, res, next) => {
   let followers;
 
   try {
-    user = await User.find({ username: username });
+    user = await User.findOne({ username: username });
   } catch (error) {
     return next(error);
   }
@@ -58,7 +58,7 @@ const getUserFollowers = async (req, res, next) => {
   }
 
   try {
-    followers = await User.find({ _id: { $in: user[0].followers } });
+    followers = await User.find({ _id: { $in: user.followers } });
   } catch (error) {
     return next(error);
   }
@@ -73,7 +73,7 @@ const getUserFollowings = async (req, res, next) => {
   let following;
 
   try {
-    user = await User.find({ username: username });
+    user = await User.findOne({ username: username });
   } catch (error) {
     return next(error);
   }
@@ -84,7 +84,7 @@ const getUserFollowings = async (req, res, next) => {
   }
 
   try {
-    following = await User.find({ _id: { $in: user[0].followings } });
+    following = await User.find({ _id: { $in: user.followings } });
   } catch (error) {
     return next(error);
   }
@@ -161,6 +161,42 @@ const editUser = async (req, res, next) => {
             .cookie("token", token, options)
             .status(200)
             .json({ token: token });
+      }
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  const { password } = req.body;
+  const userId = req.params.uid;
+
+  let user;
+
+  let hashedPassword;
+
+  try {
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 12);
+    }
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    user = User.findByIdAndUpdate(
+      userId,
+      {
+        password: hashedPassword,
+      },
+      function (err, doc) {
+        if (err) {
+          return res.send(500, { error: err });
+        } else
+          return res
+            .status(200)
+            .json({ message: "Password changed successfully!" });
       }
     );
   } catch (error) {
@@ -517,3 +553,4 @@ exports.getUserFollowings = getUserFollowings;
 exports.verifyUser = verifyUser;
 exports.googleLogin = googleLogin;
 exports.resetPassword = resetPassword;
+exports.changePassword = changePassword;
