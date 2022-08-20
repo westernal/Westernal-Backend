@@ -35,4 +35,6 @@ router.post(
   usersControllers.editUser
 );
 
+router.post("/edit/password/:uid", usersControllers.changePassword);
+
 module.exports = router;
