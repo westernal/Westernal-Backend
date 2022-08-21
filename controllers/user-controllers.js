@@ -366,7 +366,7 @@ const resetPassword = async (req, res, next) => {
           <p style="font-size: 18px; margin-bottom: 50px;">Please click the link below in order to reset your password:</p>
           <a href="https://social-media-westernal.vercel.app/forgot-password/${user._id}"         
         style="background-color: #9d38fc; padding:10px; border-radius: 10px; border:none; text-decoration: none; color: white;">Reset password</a>
-          <div style="margin-top: 50px;"><p>Not you? please contact us via <a href="mailto:ali_navidi24@yahoo.com">email</a></p></div>
+          <div style="margin-top: 50px;"><p>If this not you please ignore this email.</p></div>
       </div>
       <p style="opacity: 0.7; font-size: 14px;">Westernal - Let the songs talk</p>
   </div>`,
