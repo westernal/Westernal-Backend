@@ -340,11 +340,11 @@ const resetPassword = async (req, res, next) => {
 
   try {
     var transporter = nodemailer.createTransport({
-      host: "sahand.pws-dns.net",
+      host: "alborz.pws-dns.net",
       port: 587,
       secure: false,
       auth: {
-        user: "support.westernal@alinavidi.ir",
+        user: "support@westernal.net",
         pass: passwords.emailPassword,
       },
       debug: false,
