@@ -33,7 +33,7 @@ const getUserById = async (req, res, next) => {
   }
 
   if (!user) {
-    const err = new HttpError("user doesn't exists!", 401);
+    const err = new HttpError("User doesn't exist!", 401);
     return next(err);
   }
 
@@ -53,7 +53,7 @@ const getUserFollowers = async (req, res, next) => {
   }
 
   if (!user) {
-    const err = new HttpError("user doesn't exists!", 401);
+    const err = new HttpError("User doesn't exist!", 401);
     return next(err);
   }
 
@@ -79,7 +79,7 @@ const getUserFollowings = async (req, res, next) => {
   }
 
   if (!user) {
-    const err = new HttpError("user doesn't exists!", 401);
+    const err = new HttpError("User doesn't exist!", 401);
     return next(err);
   }
 
@@ -208,7 +208,7 @@ const signup = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new HttpError("user already exists!", 422);
+    throw new HttpError("User already exists!", 422);
   }
 
   const { username, email, password } = req.body;
@@ -393,7 +393,7 @@ const googleLogin = async (req, res, next) => {
   try {
     existingUser = await User.findOne({ email: email });
   } catch (error) {
-    const err = new HttpError("login failed!", 500);
+    const err = new HttpError("Login failed!", 500);
     return next(err);
   }
 
@@ -433,7 +433,7 @@ const followUser = async (req, res, next) => {
     followedUser = await User.findOne({ username: username });
     followingUser = await User.findById(userId);
   } catch (error) {
-    const err = new HttpError("following failed!", 500);
+    const err = new HttpError("Following user failed!", 500);
     return next(err);
   }
 
@@ -493,7 +493,7 @@ const unfollowUser = async (req, res, next) => {
     unfollowedUser = await User.findOne({ username: username });
     unfollowingUser = await User.findById(userId);
   } catch (error) {
-    const err = new HttpError("unfollowing failed!", 500);
+    const err = new HttpError("Unfollowing user failed!", 500);
     return next(err);
   }
 
@@ -522,10 +522,10 @@ const unfollowUser = async (req, res, next) => {
     await unfollowedUser.save();
     await unfollowingUser.save();
   } catch (error) {
-    const err = new HttpError("Unfollowing failed!", 500);
+    const err = new HttpError("Unfollowing user failed!", 500);
     return next(err);
   }
-  res.status(200).json({ message: "User Unfollowed Successfully!" });
+  res.status(200).json({ message: "User unfollowed successfully!" });
 };
 
 const verifyUser = async (req, res, next) => {
