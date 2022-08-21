@@ -262,7 +262,7 @@ const getPostLikes = async (req, res, next) => {
   }
 
   if (!post) {
-    const err = new HttpError("post doesn't exists!", 401);
+    const err = new HttpError("Post doesn't exist!", 401);
     return next(err);
   }
 
