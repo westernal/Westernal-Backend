@@ -338,6 +338,16 @@ const resetPassword = async (req, res, next) => {
     return next(err);
   }
 
+  let token;
+
+  try {
+    token = jwt.sign({ userId: user._id }, "secret_key", {
+      expiresIn: "1h",
+    });
+  } catch (error) {
+    return next(error);
+  }
+
   try {
     var transporter = nodemailer.createTransport({
       host: "alborz.pws-dns.net",
@@ -364,7 +374,7 @@ const resetPassword = async (req, res, next) => {
     ">
           <img src="https://i.postimg.cc/rp8nKrZD/logo.png" alt="Westernal's logo" style="width: 150px; height:150px;">
           <p style="font-size: 18px; margin-bottom: 50px;">Please click the link below in order to reset your password:</p>
-          <a href="https://social-media-westernal.vercel.app/forgot-password/${user._id}"         
+          <a href="https://social-media-westernal.vercel.app/forgot-password/${token}"         
         style="background-color: #9d38fc; padding:10px; border-radius: 10px; border:none; text-decoration: none; color: white;">Reset password</a>
           <div style="margin-top: 50px;"><p>If this not you please ignore this email.</p></div>
       </div>
