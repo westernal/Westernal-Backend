@@ -96,7 +96,7 @@ const postReply = async (req, res, next) => {
   }
 
   if (!comment) {
-    const error = new HttpError("the comment you replied does'nt exist.", 401);
+    const error = new HttpError("The comment you replied doesn't exist", 401);
     return next(error);
   }
 
@@ -107,7 +107,7 @@ const postReply = async (req, res, next) => {
   }
 
   if (!post) {
-    const error = new HttpError("Post doesn't exist.", 500);
+    const error = new HttpError("Post doesn't exist", 500);
     return next(error);
   }
 
@@ -167,7 +167,7 @@ const getRepliesByCommentId = async (req, res, next) => {
   }
 
   if (!comment) {
-    const error = new HttpError("Comment doesn't exist.");
+    const error = new HttpError("Comment doesn't exist");
     return next(error);
   }
 
@@ -195,7 +195,7 @@ const deleteComment = async (req, res, next) => {
   }
 
   if (!comment) {
-    const error = new HttpError("Comment doesn't exist.", 500);
+    const error = new HttpError("Comment doesn't exist", 500);
     return next(error);
   }
 
