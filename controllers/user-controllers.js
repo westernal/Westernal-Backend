@@ -369,14 +369,17 @@ const resetPassword = async (req, res, next) => {
       from: "Westernal <support@westernal.net>",
       to: email,
       subject: "Reset your Westernal password",
-      html: ` <div class="email" style="width: 100%; height:100%; text-align: center;">
-      <div class="email-body" style="text-align: center; border-radius: 10px; width: 70vw; margin: 10px; padding: 0 30px 20px 30px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      html: ` <div class="email" style="width: 100%; height:100%; text-align: center; ">
+      <div class="flex" style="display: flex; justify-content:center; ">
+          <div class="email-body" style="text-align: center; border-radius: 10px; width: 70vw; margin: 10px; padding: 0 30px 0 30px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     ">
           <img src="https://i.postimg.cc/rp8nKrZD/logo.png" alt="Westernal's logo" style="width: 150px; height:150px;">
           <p style="font-size: 18px; margin-bottom: 50px;">Please click the link below in order to reset your password:</p>
-          <a href="https://social-media-westernal.vercel.app/forgot-password/${token}"         
+          <a href="https://westernal.net/forgot-password/${token}"         
         style="background-color: #9d38fc; padding:10px; border-radius: 10px; border:none; text-decoration: none; color: white;">Reset password</a>
-          <div style="margin-top: 50px;"><p>If this not you please ignore this email.</p></div>
+        <p style="opacity: 0.7; font-size: 14px; margin-top: 20px;">This link will expire in 1 hour.</p>
+          <div style="margin-top: 50px;"><p>If this is not you please ignore this email.</p></div>
+      </div>
       </div>
       <p style="opacity: 0.7; font-size: 14px;">Westernal - Let the songs talk</p>
   </div>`,
