@@ -354,7 +354,7 @@ const resetPassword = async (req, res, next) => {
       port: 587,
       secure: false,
       auth: {
-        user: "support@westernal.net",
+        user: "support@contact.westernal.net",
         pass: passwords.emailPassword,
       },
       debug: false,
@@ -366,7 +366,7 @@ const resetPassword = async (req, res, next) => {
 
   try {
     var mailOptions = {
-      from: "Westernal <support@westernal.net>",
+      from: "Westernal <support@contact.westernal.net>",
       to: email,
       subject: "Reset your Westernal password",
       html: ` <div class="email" style="width: 100%; height:100%; text-align: center; ">
