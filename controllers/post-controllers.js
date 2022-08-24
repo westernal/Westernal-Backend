@@ -43,24 +43,24 @@ const getPostByUsername = async (req, res, next) => {
   let user;
 
   try {
-    user = await User.find({ username: username });
+    user = await User.findOne({ username: username });
   } catch (error) {
     return next(error);
   }
 
   if (!user) {
-    const err = new HttpError("Could not find user!", 500);
+    const err = new HttpError("Could not find user!", 404);
     return next(err);
   }
 
   try {
-    posts = await Post.find({ creator: user[0]._id }).sort({ date: -1 });
+    posts = await Post.find({ creator: user._id }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
 
   if (!posts) {
-    const err = new HttpError("Could not find the post!", 500);
+    const err = new HttpError("Could not find the post!", 400);
     return next(err);
   }
 
