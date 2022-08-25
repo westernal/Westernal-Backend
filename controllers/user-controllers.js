@@ -603,6 +603,20 @@ const getNewNotifications = async (req, res, next) => {
   } else res.status(200).json({ notifications: 0 });
 };
 
+const searchUsers = async (req, res, next) => {
+  const username = req.params.uname;
+
+  let users;
+
+  try {
+    users = await User.find({ username: { $regex: username } });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ users: users });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -618,3 +632,4 @@ exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;
 exports.clearNotification = clearNotification;
 exports.getNewNotifications = getNewNotifications;
+exports.searchUsers = searchUsers;

@@ -41,4 +41,6 @@ router.post("/notification/clear/:uid", usersControllers.clearNotification);
 
 router.get("/notification/:uid", usersControllers.getNewNotifications);
 
+router.get("/search/:uname", usersControllers.searchUsers);
+
 module.exports = router;
