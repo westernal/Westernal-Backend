@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   followers: [{ type: mongoose.Types.ObjectId, required: true, ref: "User" }],
   posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
   verified: { type: Boolean, default: false },
+  new_notification: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("User", userSchema);

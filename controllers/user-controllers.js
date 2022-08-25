@@ -479,15 +479,19 @@ const followUser = async (req, res, next) => {
     return next(error);
   }
 
+  const owner = await User.findById(followedUser._id);
+
   const notification = new Notification({
-    owner: followedUser._id,
+    owner: owner,
     user: { id: followingUser._id, username: followingUser.username },
     message: "started following you.",
     date: new Date(),
   });
 
   try {
+    owner.new_notification++;
     await notification.save();
+    await owner.save();
   } catch (error) {
     return next(error);
   }
@@ -562,6 +566,43 @@ const verifyUser = async (req, res, next) => {
   res.status(200).json({ user: user });
 };
 
+const clearNotification = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    user.new_notification = 0;
+    await user.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Notification cleared." });
+};
+
+const getNewNotifications = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (user.new_notification) {
+    res.status(200).json({ notifications: user.new_notification });
+  } else res.status(200).json({ notifications: 0 });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -575,3 +616,5 @@ exports.verifyUser = verifyUser;
 exports.googleLogin = googleLogin;
 exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;
+exports.clearNotification = clearNotification;
+exports.getNewNotifications = getNewNotifications;

@@ -37,4 +37,8 @@ router.post(
 
 router.post("/edit/password/:uid", usersControllers.changePassword);
 
+router.post("/notification/clear/:uid", usersControllers.clearNotification);
+
+router.get("/notification/:uid", usersControllers.getNewNotifications);
+
 module.exports = router;

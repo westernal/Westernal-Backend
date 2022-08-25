@@ -197,20 +197,21 @@ const likePost = async (req, res, next) => {
 
   if (!post) {
     const err = new HttpError("Could not find the post!", 500);
-
     return next(err);
   }
 
+  const owner = await User.findById(post.creator);
+
   const notification = new Notification({
-    owner: post.creator,
+    owner: owner,
     user: { id: user._id, username: user.username },
     message: "liked your post:" + " " + post.title + ".",
     date: new Date(),
   });
 
-  try {
-    await notification.save();
-  } catch (error) {}
+  owner.new_notification++;
+  await notification.save();
+  await owner.save();
 
   res.json({ message: "Post Liked!" });
 };
