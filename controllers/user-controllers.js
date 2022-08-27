@@ -100,6 +100,7 @@ const editUser = async (req, res, next) => {
   let selfUser;
   let image;
   let prevImage;
+  let user;
 
   try {
     existingUsername = await User.findOne({ username: username });
