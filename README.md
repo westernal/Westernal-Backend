@@ -1,6 +1,6 @@
-I was always bad at talking and express my feelings and I thought what if I could express my feelings through songs, unfortunately i have a bad voice :)
+I was always bad at talking and express my feelings and I thought what if I could express my feelings through songs, unfortunately i have a bad voice :).
 
-so I thought Westernal is a good idea.
+So I thought Westernal is a good idea.
 
 ## Link
 [https://www.westernal.net/](https://www.westernal.net/)
