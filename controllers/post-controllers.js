@@ -205,7 +205,7 @@ const likePost = async (req, res, next) => {
   const notification = new Notification({
     owner: owner,
     user: { id: user._id, username: user.username },
-    message: "liked your post:" + " " + post.title + ".",
+    message: "liked your post.",
     date: new Date(),
   });
 
