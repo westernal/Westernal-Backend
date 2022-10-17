@@ -23,6 +23,8 @@ router.get("/like/:pid", postControllers.getPostLikes);
 
 router.get("/", postControllers.getPosts);
 
+router.post("/save/:pid", postControllers.savePost);
+
 router.delete("/:pid", postControllers.deletePost);
 
 module.exports = router;
