@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
   verified: { type: Boolean, default: false },
   new_notification: { type: Number, default: 0 },
+  saved_posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
 });
 
 module.exports = mongoose.model("User", userSchema);
