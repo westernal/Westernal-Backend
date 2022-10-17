@@ -629,7 +629,7 @@ const getUserSavedPosts = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ notifications: user.saved_posts });
+  res.status(200).json({ posts: user.saved_posts });
 };
 
 exports.getUsers = getUsers;
