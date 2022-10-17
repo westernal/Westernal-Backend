@@ -618,6 +618,20 @@ const searchUsers = async (req, res, next) => {
   res.status(200).json({ users: users });
 };
 
+const getUserSavedPosts = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ notifications: user.saved_posts });
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -634,3 +648,4 @@ exports.changePassword = changePassword;
 exports.clearNotification = clearNotification;
 exports.getNewNotifications = getNewNotifications;
 exports.searchUsers = searchUsers;
+exports.getUserSavedPosts = getUserSavedPosts;
