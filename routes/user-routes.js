@@ -43,4 +43,6 @@ router.get("/notification/:uid", usersControllers.getNewNotifications);
 
 router.get("/search/:uname", usersControllers.searchUsers);
 
+router.get("/saved-posts/:uid", usersControllers.getUserSavedPosts);
+
 module.exports = router;
