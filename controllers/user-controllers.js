@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 const Notification = require("../models/notification");
+const Post = require("../models/posts");
 const fs = require("fs");
 var nodemailer = require("nodemailer");
 const passwords = require("../security");
@@ -622,6 +623,7 @@ const getUserSavedPosts = async (req, res, next) => {
   const userId = req.params.uid;
 
   let user;
+  let posts;
 
   try {
     user = await User.findById(userId);
@@ -629,7 +631,13 @@ const getUserSavedPosts = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ posts: user.saved_posts });
+  try {
+    posts = await Post.find({ _id: { $in: user.saved_posts } });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ posts: posts });
 };
 
 exports.getUsers = getUsers;
