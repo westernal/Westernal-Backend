@@ -317,6 +317,48 @@ const savePost = async (req, res, next) => {
   res.status(200).json({ message: "Post saved!" });
 };
 
+const unsavePost = async (req, res, next) => {
+  const postId = req.params.pid;
+  const { userId } = req.body;
+
+  let user;
+  let post;
+
+  try {
+    post = await Post.findById(postId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!post) {
+    const err = new HttpError("Post doesn't exist!", 401);
+    return next(err);
+  }
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const err = new HttpError("User doesn't exist!", 401);
+    return next(err);
+  }
+
+  try {
+    const index = user.saved_posts.indexOf(postId);
+    if (index > -1) {
+      user.saved_posts.splice(index, 1);
+      await user.save();
+    }
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Post unsaved!" });
+};
+
 exports.getPostById = getPostById;
 exports.getPostByUsername = getPostByUsername;
 exports.createPosts = createPosts;
@@ -327,3 +369,4 @@ exports.unlikePost = unlikePost;
 exports.getTimelinePost = getTimelinePost;
 exports.getPostLikes = getPostLikes;
 exports.savePost = savePost;
+exports.unsavePost = unsavePost;
