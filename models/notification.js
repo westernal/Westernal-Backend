@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const notifSchema = new mongoose.Schema({
+const notificationSchema = new mongoose.Schema({
   owner: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   user: {
     id: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
@@ -10,4 +10,4 @@ const notifSchema = new mongoose.Schema({
   date: { type: Date, required: true },
 });
 
-module.exports = mongoose.model("Notification", notifSchema);
+module.exports = mongoose.model("Notification", notificationSchema);
