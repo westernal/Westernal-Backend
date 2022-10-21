@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 
 const postsRoutes = require("./routes/post-routes");
 const usersRoutes = require("./routes/user-routes");
-const notifRoutes = require("./routes/notif-routes");
+const notificationRoutes = require("./routes/notification-routes");
 const commentRoutes = require("./routes/comment-routes");
 const HttpError = require("./models/http-error");
 const passwords = require("./security");
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
-app.use("/api/notifications", notifRoutes);
+app.use("/api/notifications", notificationRoutes);
 app.use("/api/comments", commentRoutes);
 
 app.use((req, res, next) => {

@@ -1,7 +1,7 @@
 const HttpError = require("../models/http-error");
 const Notification = require("../models/notification");
 
-const getNotifsByUserId = async (req, res, next) => {
+const getNotificationsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
   let notifications;
@@ -17,7 +17,7 @@ const getNotifsByUserId = async (req, res, next) => {
   res.status(200).json({ notifications: notifications });
 };
 
-const getNotifsLengthByUserId = async (req, res, next) => {
+const getNotificationsLengthByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
   let size;
@@ -31,5 +31,5 @@ const getNotifsLengthByUserId = async (req, res, next) => {
   res.status(200).json({ size: size });
 };
 
-exports.getNotifsByUserId = getNotifsByUserId;
-exports.getNotifsLengthByUserId = getNotifsLengthByUserId;
+exports.getNotificationsByUserId = getNotificationsByUserId;
+exports.getNotificationsLengthByUserId = getNotificationsLengthByUserId;
