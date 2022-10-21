@@ -13,8 +13,15 @@ const notificationRoutes = require("./routes/notification-routes");
 const commentRoutes = require("./routes/comment-routes");
 const HttpError = require("./models/http-error");
 const passwords = require("./security");
+const notificationSocket = require("./sockets/notification-socket");
 
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+notificationSocket.notificationSocket(io);
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -55,7 +62,7 @@ app.use((error, req, res, next) => {
 mongoose
   .connect("mongodb://0.0.0.0:27017/mern")
   .then(() => {
-    app.listen(5000);
+    server.listen(5000);
   })
   .catch((err) => {
     console.log(err);
