@@ -48,6 +48,7 @@ const postComment = async (req, res, next) => {
       id: postedComment.writer.id,
       username: postedComment.writer.username,
     },
+    postId: postId,
     message: "commented on your post.",
     date: new Date(),
   });
