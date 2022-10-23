@@ -21,8 +21,6 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, { cors: { origin: "*" } });
 
-notificationSocket.notificationSocket(io);
-
 app.use(bodyParser.json());
 app.use(cors());
 app.use(cookieParser());
