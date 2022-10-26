@@ -377,7 +377,7 @@ const resetPassword = async (req, res, next) => {
     ">
           <img src="https://i.postimg.cc/rp8nKrZD/logo.png" alt="Westernal's logo" style="width: 150px; height:150px;">
           <p style="font-size: 18px; margin-bottom: 50px;">Please click the link below in order to reset your password:</p>
-          <a href="https://westernal.net/forgot-password/${token}"         
+          <a href="https://westernal.net/users/forgot-password/${token}"         
         style="background-color: #9d38fc; padding:10px; border-radius: 10px; border:none; text-decoration: none; color: white;">Reset password</a>
         <p style="opacity: 0.7; font-size: 14px; margin-top: 20px;">This link will expire in 1 hour.</p>
           <div style="margin-top: 50px;"><p>If this is not you please ignore this email.</p></div>
