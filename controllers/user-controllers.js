@@ -94,7 +94,7 @@ const getUserFollowings = async (req, res, next) => {
 };
 
 const editUser = async (req, res, next) => {
-  const { username, bio, password } = req.body;
+  const { username, bio, link, password } = req.body;
   const userId = req.params.uid;
 
   let existingUsername;
@@ -154,6 +154,7 @@ const editUser = async (req, res, next) => {
         bio: bio,
         image: image,
         password: hashedPassword,
+        personal_link: link,
       },
       function (err, doc) {
         if (err) {
