@@ -288,7 +288,7 @@ const login = async (req, res, next) => {
   }
 
   if (!existingUser) {
-    const err = new HttpError("User doesn't exists!", 401);
+    const err = new HttpError("Incorrect login information.", 401);
     return next(err);
   }
 
@@ -301,7 +301,7 @@ const login = async (req, res, next) => {
   }
 
   if (!isValidPassword) {
-    const error = new HttpError("Password is wrong!", 401);
+    const error = new HttpError("Incorrect login information.", 401);
     return next(error);
   }
 
