@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   new_notification: { type: Number, default: 0 },
   saved_posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
   personal_link: { type: String },
+  failed_login_attempts: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -192,6 +192,7 @@ const changePassword = async (req, res, next) => {
       userId,
       {
         password: hashedPassword,
+        failed_login_attempts: 0,
       },
       function (err, doc) {
         if (err) {
@@ -293,6 +294,14 @@ const login = async (req, res, next) => {
     return next(err);
   }
 
+  if (existingUser.failed_login_attempts > 5) {
+    const err = new HttpError(
+      "Your account has been banned, we've sent you an email to reset your password.",
+      403
+    );
+    return next(err);
+  }
+
   let isValidPassword = false;
 
   try {
@@ -319,6 +328,13 @@ const login = async (req, res, next) => {
   const options = {
     httpOnly: true,
   };
+
+  try {
+    existingUser.failed_login_attempts = 0;
+    existingUser.save();
+  } catch (error) {
+    return next(error);
+  }
 
   res.cookie("token", token, options).json({
     token: token,
