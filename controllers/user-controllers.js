@@ -191,6 +191,11 @@ const changePassword = async (req, res, next) => {
     return next(error);
   }
 
+  if (!user) {
+    const err = new HttpError("User not found!", 401);
+    return next(err);
+  }
+
   try {
     isTheSamePassword = await bcrypt.compare(password, user.password);
   } catch (error) {
@@ -306,8 +311,6 @@ const login = async (req, res, next) => {
 
   if (!existingUser) {
     const err = new HttpError("Incorrect login information.", 401);
-    existingUser.failed_login_attempts++;
-    await existingUser.save();
     return next(err);
   }
 
