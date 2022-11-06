@@ -180,32 +180,39 @@ const changePassword = async (req, res, next) => {
   let hashedPassword;
 
   try {
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 12);
-    }
+    hashedPassword = await bcrypt.hash(password, 12);
   } catch (error) {
     return next(error);
   }
 
   try {
-    user = User.findByIdAndUpdate(
-      userId,
-      {
-        password: hashedPassword,
-        failed_login_attempts: 0,
-      },
-      function (err, doc) {
-        if (err) {
-          return res.send(500, { error: err });
-        } else
-          return res
-            .status(200)
-            .json({ message: "Password changed successfully!" });
-      }
-    );
+    user = await User.findById(userId);
   } catch (error) {
     return next(error);
   }
+
+  try {
+    isTheSamePassword = await bcrypt.compare(password, user.password);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (isTheSamePassword) {
+    const err = new HttpError(
+      "Please select a password that has not been used before.",
+      500
+    );
+    return next(err);
+  }
+
+  try {
+    user.password = hashedPassword;
+    user.failed_login_attempts = 0;
+    await user.save();
+  } catch (error) {
+    return next(error);
+  }
+  res.status(200).json({ message: "Password changed successfully!" });
 };
 
 const signup = async (req, res, next) => {
@@ -300,7 +307,7 @@ const login = async (req, res, next) => {
   if (!existingUser) {
     const err = new HttpError("Incorrect login information.", 401);
     existingUser.failed_login_attempts++;
-    existingUser.save();
+    await existingUser.save();
     return next(err);
   }
 
@@ -315,7 +322,7 @@ const login = async (req, res, next) => {
   if (!isValidPassword) {
     const error = new HttpError("Incorrect login information.", 401);
     existingUser.failed_login_attempts++;
-    existingUser.save();
+    await existingUser.save();
     return next(error);
   }
 
@@ -335,7 +342,7 @@ const login = async (req, res, next) => {
 
   try {
     existingUser.failed_login_attempts = 0;
-    existingUser.save();
+    await existingUser.save();
   } catch (error) {
     return next(error);
   }
