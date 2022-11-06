@@ -289,16 +289,18 @@ const login = async (req, res, next) => {
     return next(err);
   }
 
-  if (!existingUser) {
-    const err = new HttpError("Incorrect login information.", 401);
+  if (existingUser.failed_login_attempts > 5) {
+    const err = new HttpError(
+      "Your account has been banned, change your password to unban it.",
+      403
+    );
     return next(err);
   }
 
-  if (existingUser.failed_login_attempts > 5) {
-    const err = new HttpError(
-      "Your account has been banned, we've sent you an email to reset your password.",
-      403
-    );
+  if (!existingUser) {
+    const err = new HttpError("Incorrect login information.", 401);
+    existingUser.failed_login_attempts++;
+    existingUser.save();
     return next(err);
   }
 
@@ -312,6 +314,8 @@ const login = async (req, res, next) => {
 
   if (!isValidPassword) {
     const error = new HttpError("Incorrect login information.", 401);
+    existingUser.failed_login_attempts++;
+    existingUser.save();
     return next(error);
   }
 
