@@ -472,8 +472,13 @@ const followUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (followedUser == followingUser) {
-    const error = new HttpError("You can't follow yourself", 500);
+  if (!followedUser || !followingUser) {
+    const err = new HttpError("Following user failed!", 500);
+    return next(err);
+  }
+
+  if (followedUser.username == followingUser.username) {
+    const error = new HttpError("You can't follow yourself", 401);
     return next(error);
   }
 
@@ -492,7 +497,7 @@ const followUser = async (req, res, next) => {
     if (secondIndex < 0) {
       followingUser.followings.push(followedUser);
     } else {
-      const error = new HttpError("You already follow this user!");
+      const error = new HttpError("You already follow this user!", 400);
       return next(error);
     }
 
