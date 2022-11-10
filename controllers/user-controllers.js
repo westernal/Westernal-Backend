@@ -94,7 +94,7 @@ const getUserFollowings = async (req, res, next) => {
 };
 
 const editUser = async (req, res, next) => {
-  const { username, bio, link, password } = req.body;
+  const { username, bio, link } = req.body;
   const userId = req.params.uid;
 
   let existingUsername;
@@ -124,16 +124,6 @@ const editUser = async (req, res, next) => {
     return next(err);
   }
 
-  let hashedPassword;
-
-  try {
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 12);
-    }
-  } catch (error) {
-    return next(error);
-  }
-
   let token;
 
   try {
@@ -153,7 +143,6 @@ const editUser = async (req, res, next) => {
         username: username,
         bio: bio,
         image: image,
-        password: hashedPassword,
         personal_link: link,
       },
       function (err, doc) {
@@ -483,7 +472,7 @@ const followUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (followedUser._id === followingUser._id) {
+  if (followedUser == followingUser) {
     const error = new HttpError("You can't follow yourself", 500);
     return next(error);
   }
@@ -547,7 +536,7 @@ const unfollowUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (unfollowedUser._id === unfollowingUser._id) {
+  if (unfollowedUser == unfollowingUser) {
     const error = new HttpError("You can't follow yourself", 500);
     return next(error);
   }

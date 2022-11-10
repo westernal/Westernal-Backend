@@ -169,6 +169,30 @@ const deletePost = async (req, res, next) => {
   res.json({ message: "Post Deleted!" });
 };
 
+const editPost = async (req, res, next) => {
+  const { title, description } = req.body;
+  const postId = req.params.pid;
+
+  let post;
+
+  try {
+    post = Post.findByIdAndUpdate(
+      postId,
+      {
+        title: title,
+        description: description,
+      },
+      function (err, doc) {
+        if (err) {
+          return res.send(500, { error: err });
+        } else return res.status(200).json({ token: token });
+      }
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const likePost = async (req, res, next) => {
   const postId = req.params.pid;
 
@@ -371,3 +395,4 @@ exports.getTimelinePost = getTimelinePost;
 exports.getPostLikes = getPostLikes;
 exports.savePost = savePost;
 exports.unsavePost = unsavePost;
+exports.editPost = editPost;

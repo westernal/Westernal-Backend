@@ -25,6 +25,8 @@ router.get("/", postControllers.getPosts);
 
 router.post("/save/:pid", postControllers.savePost);
 
+router.post("/edit/:pid", postControllers.editPost);
+
 router.post("/unsave/:pid", postControllers.unsavePost);
 
 router.delete("/:pid", postControllers.deletePost);
