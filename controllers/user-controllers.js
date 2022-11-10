@@ -501,19 +501,17 @@ const followUser = async (req, res, next) => {
     return next(error);
   }
 
-  const owner = await User.findById(followedUser._id);
-
   const notification = new Notification({
-    owner: owner,
+    owner: followedUser,
     user: { id: followingUser._id, username: followingUser.username },
     message: "started following you.",
     date: new Date(),
   });
 
   try {
-    owner.new_notification++;
+    followedUser.new_notification++;
     await notification.save();
-    await owner.save();
+    await followedUser.save();
   } catch (error) {
     return next(error);
   }
