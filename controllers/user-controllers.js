@@ -539,7 +539,7 @@ const unfollowUser = async (req, res, next) => {
     return next(err);
   }
 
-  if (unfollowedUser == unfollowingUser) {
+  if (unfollowedUser.username == unfollowingUser.username) {
     const error = new HttpError("You can't follow yourself", 500);
     return next(error);
   }
