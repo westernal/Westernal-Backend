@@ -182,10 +182,12 @@ const editPost = async (req, res, next) => {
         title: title,
         description: description,
       },
+      { new: true },
       function (err, doc) {
         if (err) {
           return res.send(500, { error: err });
-        } else return res.status(200).json({ token: token });
+        }
+        return res.status(200).json({ message: "Post edited!" });
       }
     );
   } catch (error) {
