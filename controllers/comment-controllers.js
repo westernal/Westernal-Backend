@@ -134,9 +134,7 @@ const postReply = async (req, res, next) => {
     await owner.save();
     await postedComment.save();
     comment.replies.push(postedComment._id);
-    post.comments_length++;
     await comment.save();
-    await post.save();
   } catch (error) {
     return next(error);
   }
@@ -222,7 +220,7 @@ const deleteComment = async (req, res, next) => {
 
   try {
     await comment.remove();
-    post.comments_length = post.comments_length - (comment.replies.length + 1);
+    post.comments_length = post.comments_length - 1;
     await post.save();
   } catch (error) {
     return next(error);
