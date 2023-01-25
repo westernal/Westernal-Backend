@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema({
   title: { type: String },
   description: { type: String },
-  creator: {
-    id: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  author: {
     username: { type: String },
     image: { type: String },
     verified: { type: Boolean },

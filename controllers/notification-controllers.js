@@ -1,5 +1,6 @@
 const HttpError = require("../models/http-error");
 const Notification = require("../models/notification");
+const User = require("../models/user");
 
 const getNotificationsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
@@ -18,11 +19,11 @@ const getNotificationsByUserId = async (req, res, next) => {
     notifications = await Promise.all(
       notifications.map(async (notification) => {
         const { username, image, verified } = await User.findById(
-          notification.creator.id
+          notification.user.id
         );
-        notification.creator.username = username;
-        notification.creator.image = image;
-        notification.creator.verified = verified;
+        notification.user.username = username;
+        notification.user.image = image;
+        notification.user.verified = verified;
         return notification;
       })
     );

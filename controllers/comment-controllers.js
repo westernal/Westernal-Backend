@@ -138,11 +138,11 @@ const getCommentsByPostId = async (req, res, next) => {
     comments = await Promise.all(
       comments.map(async (comment) => {
         const { username, image, verified } = await User.findById(
-          comment.creator.id
+          comment.writer.id
         );
-        comment.creator.username = username;
-        comment.creator.avatar = image;
-        comment.creator.verified = verified;
+        comment.writer.username = username;
+        comment.writer.avatar = image;
+        comment.writer.verified = verified;
         return comment;
       })
     );
