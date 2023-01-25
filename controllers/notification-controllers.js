@@ -14,6 +14,22 @@ const getNotificationsByUserId = async (req, res, next) => {
     return next(error);
   }
 
+  try {
+    notifications = await Promise.all(
+      notifications.map(async (notification) => {
+        const { username, image, verified } = await User.findById(
+          notification.creator.id
+        );
+        notification.creator.username = username;
+        notification.creator.image = image;
+        notification.creator.verified = verified;
+        return notification;
+      })
+    );
+  } catch (error) {
+    return next(error);
+  }
+
   res.status(200).json({ notifications: notifications });
 };
 

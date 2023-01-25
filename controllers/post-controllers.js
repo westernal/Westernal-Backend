@@ -17,8 +17,12 @@ const getPosts = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username } = await User.findById(post.creator.id);
+        const { username, image, verified } = await User.findById(
+          post.creator.id
+        );
         post.creator.username = username;
+        post.creator.image = image;
+        post.creator.verified = verified;
         return post;
       })
     );
@@ -46,8 +50,10 @@ const getPostById = async (req, res, next) => {
   }
 
   try {
-    const { username } = await User.findById(item.creator.id);
+    const { username, image, verified } = await User.findById(item.creator.id);
     post.creator.username = username;
+    post.creator.image = image;
+    post.creator.verified = verified;
   } catch (error) {
     return next(error);
   }
@@ -86,8 +92,12 @@ const getPostByUsername = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username } = await User.findById(post.creator.id);
+        const { username, image, verified } = await User.findById(
+          post.creator.id
+        );
         post.creator.username = username;
+        post.creator.image = image;
+        post.creator.verified = verified;
         return post;
       })
     );
@@ -135,8 +145,12 @@ const getTimelinePost = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username } = await User.findById(post.creator.id);
+        const { username, image, verified } = await User.findById(
+          post.creator.id
+        );
         post.creator.username = username;
+        post.creator.image = image;
+        post.creator.verified = verified;
         return post;
       })
     );

@@ -6,6 +6,8 @@ const postSchema = new mongoose.Schema({
   creator: {
     id: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
     username: { type: String },
+    image: { type: String },
+    verified: { type: Boolean },
   },
   songUrl: { type: String, required: true },
   date: { type: Date, required: true },

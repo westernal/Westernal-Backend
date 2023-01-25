@@ -660,6 +660,22 @@ const getUserSavedPosts = async (req, res, next) => {
     return next(error);
   }
 
+  try {
+    posts = await Promise.all(
+      posts.map(async (post) => {
+        const { username, image, verified } = await User.findById(
+          post.creator.id
+        );
+        post.creator.username = username;
+        post.creator.image = image;
+        post.creator.verified = verified;
+        return post;
+      })
+    );
+  } catch (error) {
+    return next(error);
+  }
+
   res.status(200).json({ posts: posts });
 };
 

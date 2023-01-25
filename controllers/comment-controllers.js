@@ -9,21 +9,9 @@ const postComment = async (req, res, next) => {
 
   const commentDate = new Date();
   let post;
-  let user;
-
-  try {
-    user = await User.findById(writerId);
-  } catch (error) {
-    next(error);
-  }
-
-  if (!user) {
-    const error = new HttpError("User doesn't exist.", 500);
-    return next(error);
-  }
 
   const postedComment = new Comment({
-    writer: { id: writerId, username: user.username, avatar: user.image },
+    writer: { id: writerId },
     postId: postId,
     message: message,
     date: commentDate,
@@ -72,22 +60,10 @@ const postReply = async (req, res, next) => {
 
   const commentDate = new Date();
   let post;
-  let user;
   let comment;
 
-  try {
-    user = await User.findById(writerId);
-  } catch (error) {
-    next(error);
-  }
-
-  if (!user) {
-    const error = new HttpError("User doesn't exist.", 500);
-    return next(error);
-  }
-
   const postedComment = new Comment({
-    writer: { id: writerId, username: user.username, avatar: user.image },
+    writer: { id: writerId },
     postId: postId,
     message: message,
     date: commentDate,
@@ -154,6 +130,22 @@ const getCommentsByPostId = async (req, res, next) => {
     }).sort({
       date: -1,
     });
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    comments = await Promise.all(
+      comments.map(async (comment) => {
+        const { username, image, verified } = await User.findById(
+          comment.creator.id
+        );
+        comment.creator.username = username;
+        comment.creator.avatar = image;
+        comment.creator.verified = verified;
+        return comment;
+      })
+    );
   } catch (error) {
     return next(error);
   }
