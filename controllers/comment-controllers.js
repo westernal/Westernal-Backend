@@ -178,6 +178,22 @@ const getRepliesByCommentId = async (req, res, next) => {
     return next(error);
   }
 
+  try {
+    replies = await Promise.all(
+      replies.map(async (comment) => {
+        const { username, image, verified } = await User.findById(
+          comment.writer.id
+        );
+        comment.writer.username = username;
+        comment.writer.avatar = image;
+        comment.writer.verified = verified;
+        return comment;
+      })
+    );
+  } catch (error) {
+    return next(error);
+  }
+
   res.status(200).json({ replies: replies });
 };
 
