@@ -14,6 +14,18 @@ const getPosts = async (req, res, next) => {
     return next(err);
   }
 
+  try {
+    posts = await Promise.all(
+      posts.map(async (post) => {
+        const { username } = await User.findById(post.creator.id);
+        post.creator.username = username;
+        return post;
+      })
+    );
+  } catch (error) {
+    return next(error);
+  }
+
   res.json({ posts: posts });
 };
 
@@ -31,6 +43,13 @@ const getPostById = async (req, res, next) => {
   if (!post) {
     const err = new HttpError("Could not find the post!", 500);
     return next(err);
+  }
+
+  try {
+    const { username } = await User.findById(item.creator.id);
+    post.creator.username = username;
+  } catch (error) {
+    return next(error);
   }
 
   res.json({ post: post.toObject({ getters: true }) });
@@ -62,6 +81,18 @@ const getPostByUsername = async (req, res, next) => {
   if (!posts) {
     const err = new HttpError("Could not find the post!", 400);
     return next(err);
+  }
+
+  try {
+    posts = await Promise.all(
+      posts.map(async (post) => {
+        const { username } = await User.findById(post.creator.id);
+        post.creator.username = username;
+        return post;
+      })
+    );
+  } catch (error) {
+    return next(error);
   }
 
   res.json({ posts: posts, creator: user });
@@ -99,6 +130,18 @@ const getTimelinePost = async (req, res, next) => {
   if (!posts) {
     const err = new HttpError("Could not find the post!", 500);
     return next(err);
+  }
+
+  try {
+    posts = await Promise.all(
+      posts.map(async (post) => {
+        const { username } = await User.findById(post.creator.id);
+        post.creator.username = username;
+        return post;
+      })
+    );
+  } catch (error) {
+    return next(error);
   }
 
   res.json({ posts: posts });
