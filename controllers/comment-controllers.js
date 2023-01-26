@@ -28,13 +28,10 @@ const postComment = async (req, res, next) => {
     return next(error);
   }
 
-  const owner = await User.findById(post.creator);
-
   const notification = new Notification({
-    owner: owner,
+    owner: post.creator,
     user: {
-      id: postedComment.writer.id,
-      username: postedComment.writer.username,
+      id: writerId,
     },
     postId: postId,
     message: "commented on your post.",

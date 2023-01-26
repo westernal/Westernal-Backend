@@ -253,10 +253,7 @@ const likePost = async (req, res, next) => {
 
   const { userId } = req.body;
 
-  let user;
-
   try {
-    user = await User.findById(userId);
     post = await Post.findById(postId);
   } catch (error) {
     return next(error);
@@ -277,12 +274,10 @@ const likePost = async (req, res, next) => {
     return next(err);
   }
 
-  const owner = await User.findById(post.creator);
-
   const notification = new Notification({
-    owner: owner,
-    user: { id: user._id, username: user.username },
-    postId: post._id,
+    owner: post.creator,
+    user: { id: userId },
+    postId: postId,
     message: "liked your post.",
     date: new Date(),
   });
