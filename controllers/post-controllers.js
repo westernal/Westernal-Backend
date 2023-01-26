@@ -262,7 +262,7 @@ const likePost = async (req, res, next) => {
   try {
     const index = post.likes.indexOf(userId);
     if (index < 0) {
-      post.likes.push(user);
+      post.likes.push(userId);
       await post.save();
     }
   } catch (error) {
@@ -274,6 +274,8 @@ const likePost = async (req, res, next) => {
     return next(err);
   }
 
+  const owner = await User.findById(post.creator);
+
   const notification = new Notification({
     owner: post.creator,
     user: { id: userId },
@@ -282,9 +284,13 @@ const likePost = async (req, res, next) => {
     date: new Date(),
   });
 
-  owner.new_notification++;
-  await notification.save();
-  await owner.save();
+  try {
+    owner.new_notification++;
+    await notification.save();
+    await owner.save();
+  } catch (error) {
+    return next(error);
+  }
 
   res.json({ message: "Post Liked!" });
 };
