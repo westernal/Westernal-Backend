@@ -220,14 +220,7 @@ const deleteComment = async (req, res, next) => {
   }
 
   try {
-    post = await Post.findById(comment.postId);
-  } catch (error) {
-    return next(error);
-  }
-
-  try {
     await comment.remove();
-    await post.save();
   } catch (error) {
     return next(error);
   }
