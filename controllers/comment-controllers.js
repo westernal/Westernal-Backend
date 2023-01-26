@@ -94,7 +94,7 @@ const postReply = async (req, res, next) => {
   const owner = await User.findById(post.creator);
 
   const notification = new Notification({
-    owner: owner,
+    owner: comment.writer,
     user: {
       id: writerId,
     },
