@@ -227,9 +227,6 @@ const deleteComment = async (req, res, next) => {
 
   try {
     await comment.remove();
-    if (comment.type == "comment") {
-      post.comments_length = post.comments_length - 1;
-    }
     await post.save();
   } catch (error) {
     return next(error);

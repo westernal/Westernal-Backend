@@ -8,6 +8,7 @@ const Post = require("../models/posts");
 const fs = require("fs");
 var nodemailer = require("nodemailer");
 const passwords = require("../security");
+const Comment = require("../models/comment.js");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -664,6 +665,7 @@ const getUserSavedPosts = async (req, res, next) => {
     posts = await Promise.all(
       posts.map(async (post) => {
         const { username, image, verified } = await User.findById(post.creator);
+        post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
         post.author.verified = verified;

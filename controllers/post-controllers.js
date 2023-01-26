@@ -3,6 +3,7 @@ const Post = require("../models/posts");
 const User = require("../models/user");
 const Notification = require("../models/notification");
 var validUrl = require("valid-url");
+const Comment = require("../models/comment.js");
 
 const getPosts = async (req, res, next) => {
   let posts;
@@ -18,6 +19,7 @@ const getPosts = async (req, res, next) => {
     posts = await Promise.all(
       posts.map(async (post) => {
         const { username, image, verified } = await User.findById(post.creator);
+        post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
         post.author.verified = verified;
@@ -49,6 +51,7 @@ const getPostById = async (req, res, next) => {
 
   try {
     const { username, image, verified } = await User.findById(post.creator);
+    post.comments_length = await Comment.count({ postId: post._id });
     post.author.username = username;
     post.author.image = image;
     post.author.verified = verified;
@@ -91,6 +94,7 @@ const getPostByUsername = async (req, res, next) => {
     posts = await Promise.all(
       posts.map(async (post) => {
         const { username, image, verified } = await User.findById(post.creator);
+        post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
         post.author.verified = verified;
@@ -142,6 +146,7 @@ const getTimelinePost = async (req, res, next) => {
     posts = await Promise.all(
       posts.map(async (post) => {
         const { username, image, verified } = await User.findById(post.creator);
+        post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
         post.author.verified = verified;
