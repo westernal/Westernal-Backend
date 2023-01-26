@@ -94,12 +94,12 @@ const postReply = async (req, res, next) => {
   const owner = await User.findById(post.creator);
 
   const notification = new Notification({
-    owner: comment.writer,
+    owner: comment.writer.id,
     user: {
       id: writerId,
     },
     postId: postId,
-    message: "replied your comment:" + " " + comment.message + ".",
+    message: "replied your comment.",
     date: new Date(),
   });
 
