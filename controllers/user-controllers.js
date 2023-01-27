@@ -664,7 +664,9 @@ const getUserSavedPosts = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username, image, verified } = await User.findById(post.creator);
+        const { username, image, verified } = await User.findById(
+          post.author.id
+        );
         post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;

@@ -18,7 +18,9 @@ const getPosts = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username, image, verified } = await User.findById(post.creator);
+        const { username, image, verified } = await User.findById(
+          post.author.id
+        );
         post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
@@ -50,7 +52,7 @@ const getPostById = async (req, res, next) => {
   }
 
   try {
-    const { username, image, verified } = await User.findById(post.creator);
+    const { username, image, verified } = await User.findById(post.author.id);
     post.comments_length = await Comment.count({ postId: post._id });
     post.author.username = username;
     post.author.image = image;
@@ -80,7 +82,7 @@ const getPostByUsername = async (req, res, next) => {
   }
 
   try {
-    posts = await Post.find({ creator: user._id }).sort({ date: -1 });
+    posts = await Post.find({ author: { id: user._id } }).sort({ date: -1 });
   } catch (error) {
     return next(error);
   }
@@ -93,7 +95,9 @@ const getPostByUsername = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username, image, verified } = await User.findById(post.creator);
+        const { username, image, verified } = await User.findById(
+          post.author.id
+        );
         post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
@@ -130,7 +134,7 @@ const getTimelinePost = async (req, res, next) => {
   users.push(userId);
 
   try {
-    posts = await Post.find({ creator: { $in: users } })
+    posts = await Post.find({ author: { id: { $in: users } } })
       .limit(10)
       .sort({ date: -1 });
   } catch (error) {
@@ -145,7 +149,9 @@ const getTimelinePost = async (req, res, next) => {
   try {
     posts = await Promise.all(
       posts.map(async (post) => {
-        const { username, image, verified } = await User.findById(post.creator);
+        const { username, image, verified } = await User.findById(
+          post.author.id
+        );
         post.comments_length = await Comment.count({ postId: post._id });
         post.author.username = username;
         post.author.image = image;
@@ -161,7 +167,7 @@ const getTimelinePost = async (req, res, next) => {
 };
 
 const createPosts = async (req, res, next) => {
-  const { title, description, creator, song } = req.body;
+  const { title, authorID, song } = req.body;
 
   const postDate = new Date();
 
@@ -172,8 +178,7 @@ const createPosts = async (req, res, next) => {
 
   const createdPost = new Post({
     title: title,
-    description: description,
-    creator: creator,
+    author: { id: authorID },
     songUrl: song,
     date: postDate,
     likes: [],
@@ -182,7 +187,7 @@ const createPosts = async (req, res, next) => {
   let user;
 
   try {
-    user = await User.findById(creator);
+    user = await User.findById(author.id);
   } catch (err) {
     return next(err);
   }
@@ -209,15 +214,15 @@ const deletePost = async (req, res, next) => {
   let post;
 
   try {
-    post = await Post.findById(postId).populate("creator");
+    post = await Post.findById(postId).populate("author.id");
   } catch (error) {
     return next(error);
   }
 
   try {
     await post.remove();
-    post.creator.posts.pull(post);
-    await post.creator.save();
+    post.author.id.posts.pull(post);
+    await post.author.id.save();
   } catch (error) {
     return next(error);
   }
@@ -226,7 +231,7 @@ const deletePost = async (req, res, next) => {
 };
 
 const editPost = async (req, res, next) => {
-  const { title, description } = req.body;
+  const { title } = req.body;
   const postId = req.params.pid;
 
   let post;
@@ -236,7 +241,6 @@ const editPost = async (req, res, next) => {
       postId,
       {
         title: title,
-        description: description,
       },
       { new: true },
       function (err, doc) {
@@ -279,10 +283,10 @@ const likePost = async (req, res, next) => {
     return next(err);
   }
 
-  const owner = await User.findById(post.creator);
+  const owner = await User.findById(post.author.id);
 
   const notification = new Notification({
-    owner: post.creator,
+    owner: post.author.id,
     user: { id: userId },
     postId: postId,
     message: "liked your post.",
