@@ -134,7 +134,7 @@ const getTimelinePost = async (req, res, next) => {
   users.push(userId);
 
   try {
-    posts = await Post.find({ author: { id: { $in: users } } })
+    posts = await Post.find({ "author.id": { $in: users } })
       .limit(10)
       .sort({ date: -1 });
   } catch (error) {
@@ -167,19 +167,19 @@ const getTimelinePost = async (req, res, next) => {
 };
 
 const createPosts = async (req, res, next) => {
-  const { title, authorID, song } = req.body;
+  const { caption, authorID, songURL } = req.body;
 
   const postDate = new Date();
 
-  if (!validUrl.isUri(song)) {
+  if (!validUrl.isUri(songURL)) {
     const error = new HttpError("URL is not valid!", 422);
     return next(error);
   }
 
   const createdPost = new Post({
-    title: title,
+    caption: caption,
     author: { id: authorID },
-    songUrl: song,
+    songUrl: songURL,
     date: postDate,
     likes: [],
   });
@@ -187,7 +187,7 @@ const createPosts = async (req, res, next) => {
   let user;
 
   try {
-    user = await User.findById(author.id);
+    user = await User.findById(authorID);
   } catch (err) {
     return next(err);
   }
