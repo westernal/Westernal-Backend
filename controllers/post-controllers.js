@@ -231,7 +231,7 @@ const deletePost = async (req, res, next) => {
 };
 
 const editPost = async (req, res, next) => {
-  const { title } = req.body;
+  const { caption } = req.body;
   const postId = req.params.pid;
 
   let post;
@@ -240,7 +240,7 @@ const editPost = async (req, res, next) => {
     post = Post.findByIdAndUpdate(
       postId,
       {
-        title: title,
+        caption: caption,
       },
       { new: true },
       function (err, doc) {
