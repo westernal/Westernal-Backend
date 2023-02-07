@@ -28,8 +28,6 @@ const postComment = async (req, res, next) => {
     return next(error);
   }
 
-  const owner = await User.findById(post.creator);
-
   const notification = new Notification({
     owner: post.creator,
     user: {
@@ -41,9 +39,7 @@ const postComment = async (req, res, next) => {
   });
 
   try {
-    owner.new_notification++;
     await notification.save();
-    await owner.save();
     await postedComment.save();
     post.comments_length++;
     await post.save();
@@ -91,8 +87,6 @@ const postReply = async (req, res, next) => {
     return next(error);
   }
 
-  const owner = await User.findById(post.creator);
-
   const notification = new Notification({
     owner: comment.writer.id,
     user: {
@@ -104,9 +98,7 @@ const postReply = async (req, res, next) => {
   });
 
   try {
-    owner.new_notification++;
     await notification.save();
-    await owner.save();
     await postedComment.save();
     comment.replies.push(postedComment._id);
     await comment.save();
