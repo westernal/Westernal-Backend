@@ -29,7 +29,7 @@ const postComment = async (req, res, next) => {
   }
 
   const notification = new Notification({
-    owner: post.creator,
+    owner: post.author.id,
     user: {
       id: writerId,
     },
