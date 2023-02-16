@@ -287,7 +287,7 @@ const login = async (req, res, next) => {
   try {
     existingUser = await User.findOne({ username: username });
   } catch (error) {
-    const err = new HttpError("Login failed.", 500);
+    const err = new HttpError("Login failed!", 401);
     return next(err);
   }
 
@@ -373,11 +373,11 @@ const resetPassword = async (req, res, next) => {
 
   try {
     var transporter = nodemailer.createTransport({
-      host: "alborz.pws-dns.net",
+      host: "sahand.pws-dns.net",
       port: 587,
       secure: false,
       auth: {
-        user: "support@contact.westernal.net",
+        user: "westernal-support@alinavidi.ir",
         pass: passwords.emailPassword,
       },
       debug: false,
@@ -389,7 +389,7 @@ const resetPassword = async (req, res, next) => {
 
   try {
     var mailOptions = {
-      from: "Westernal <support@contact.westernal.net>",
+      from: "Westernal <support@westernal.net>",
       to: email,
       subject: "Reset your Westernal password",
       html: ` <div class="email" style="width: 100%; height:100%; text-align: center; ">
@@ -413,7 +413,7 @@ const resetPassword = async (req, res, next) => {
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-      const err = new HttpError("Sending email failed!", 401);
+      const err = new HttpError("Sending email failed!" + " " + error, 401);
       return next(err);
     } else {
       res.status(200).json({ message: "Email sent." });
