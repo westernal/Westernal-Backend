@@ -287,7 +287,12 @@ const login = async (req, res, next) => {
   try {
     existingUser = await User.findOne({ username: username });
   } catch (error) {
-    const err = new HttpError("login failed!", 500);
+    const err = new HttpError("Login failed.", 500);
+    return next(err);
+  }
+
+  if (!existingUser) {
+    const err = new HttpError("Incorrect login information.", 401);
     return next(err);
   }
 
@@ -296,11 +301,6 @@ const login = async (req, res, next) => {
       "Your account has been banned, change your password to unban it.",
       403
     );
-    return next(err);
-  }
-
-  if (!existingUser) {
-    const err = new HttpError("Incorrect login information.", 401);
     return next(err);
   }
 
