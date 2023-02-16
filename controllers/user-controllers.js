@@ -632,10 +632,14 @@ const getNewNotifications = async (req, res, next) => {
 const searchUsers = async (req, res, next) => {
   const username = req.params.uname;
 
+  if (!username) {
+    res.status(200).json({ users: [] });
+  }
+
   let users;
 
   try {
-    users = await User.find({ username: { $regex: username } });
+    users = await User.find({ username: { $regex: username.toLowerCase() } });
   } catch (error) {
     return next(error);
   }
