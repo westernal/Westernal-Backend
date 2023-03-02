@@ -41,7 +41,7 @@ const postComment = async (req, res, next) => {
     return next(error);
   }
 
-  if (post.author.id !== user._id) {
+  if (post.author.id != writerId) {
     notification = new Notification({
       owner: post.author.id,
       user: {
@@ -54,7 +54,7 @@ const postComment = async (req, res, next) => {
   }
 
   try {
-    if (post.author.id !== user._id) {
+    if (post.author.id != writerId) {
       user.new_notification++;
       await user.save();
       await notification.save();
@@ -71,7 +71,6 @@ const postComment = async (req, res, next) => {
 
 const postReply = async (req, res, next) => {
   const { writerId, postId, message, commentId } = req.body;
-
   const commentDate = new Date();
   let post;
   let comment;
@@ -119,20 +118,20 @@ const postReply = async (req, res, next) => {
     return next(error);
   }
 
-  if (post.author.id !== user._id) {
+  if (comment.writer.id != writerId) {
     notification = new Notification({
-      owner: post.author.id,
+      owner: comment.writer.id,
       user: {
         id: writerId,
       },
       postId: postId,
-      message: "commented on your post.",
+      message: "replied your comment.",
       date: new Date(),
     });
   }
 
   try {
-    if (post.author.id !== user._id) {
+    if (comment.writer.id != writerId) {
       user.new_notification++;
       await user.save();
       await notification.save();
