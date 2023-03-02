@@ -257,8 +257,8 @@ const editPost = async (req, res, next) => {
 
 const likePost = async (req, res, next) => {
   const postId = req.params.pid;
-
   let post;
+  let notification;
 
   const { userId } = req.body;
 
@@ -285,13 +285,15 @@ const likePost = async (req, res, next) => {
 
   const owner = await User.findById(post.author.id);
 
-  const notification = new Notification({
-    owner: post.author.id,
-    user: { id: userId },
-    postId: postId,
-    message: "liked your post.",
-    date: new Date(),
-  });
+  if (owner._id !== post.author.id) {
+    notification = new Notification({
+      owner: post.author.id,
+      user: { id: userId },
+      postId: postId,
+      message: "liked your post.",
+      date: new Date(),
+    });
+  }
 
   try {
     owner.new_notification++;
@@ -306,15 +308,10 @@ const likePost = async (req, res, next) => {
 
 const unlikePost = async (req, res, next) => {
   const postId = req.params.pid;
-
   let post;
-
   const { userId } = req.body;
 
-  let user;
-
   try {
-    user = await User.findById(userId);
     post = await Post.findById(postId);
   } catch (error) {
     return next(error);
