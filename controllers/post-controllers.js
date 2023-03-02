@@ -285,7 +285,7 @@ const likePost = async (req, res, next) => {
 
   const owner = await User.findById(post.author.id);
 
-  if (owner._id !== post.author.id) {
+  if (userId != post.author.id) {
     notification = new Notification({
       owner: post.author.id,
       user: { id: userId },
@@ -296,9 +296,11 @@ const likePost = async (req, res, next) => {
   }
 
   try {
-    owner.new_notification++;
-    await notification.save();
-    await owner.save();
+    if (userId != post.author.id) {
+      owner.new_notification++;
+      await notification.save();
+      await owner.save();
+    }
   } catch (error) {
     return next(error);
   }
