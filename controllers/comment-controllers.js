@@ -9,6 +9,7 @@ const postComment = async (req, res, next) => {
 
   const commentDate = new Date();
   let post;
+  let user;
 
   const postedComment = new Comment({
     writer: { id: writerId },
@@ -28,6 +29,17 @@ const postComment = async (req, res, next) => {
     return next(error);
   }
 
+  try {
+    user = await User.findById(post.author.id);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Post author doesn't exist.", 500);
+    return next(error);
+  }
+
   const notification = new Notification({
     owner: post.author.id,
     user: {
@@ -39,9 +51,10 @@ const postComment = async (req, res, next) => {
   });
 
   try {
-    post.author.new_notification++;
+    user.new_notification++;
     await notification.save();
     await postedComment.save();
+    await user.save();
     post.comments_length++;
     await post.save();
   } catch (error) {
