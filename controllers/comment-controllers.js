@@ -10,6 +10,7 @@ const postComment = async (req, res, next) => {
   const commentDate = new Date();
   let post;
   let user;
+  let notification;
 
   const postedComment = new Comment({
     writer: { id: writerId },
@@ -40,21 +41,25 @@ const postComment = async (req, res, next) => {
     return next(error);
   }
 
-  const notification = new Notification({
-    owner: post.author.id,
-    user: {
-      id: writerId,
-    },
-    postId: postId,
-    message: "commented on your post.",
-    date: new Date(),
-  });
+  if (post.author.id !== user._id) {
+    notification = new Notification({
+      owner: post.author.id,
+      user: {
+        id: writerId,
+      },
+      postId: postId,
+      message: "commented on your post.",
+      date: new Date(),
+    });
+  }
 
   try {
-    user.new_notification++;
-    await notification.save();
+    if (post.author.id !== user._id) {
+      user.new_notification++;
+      await user.save();
+      await notification.save();
+    }
     await postedComment.save();
-    await user.save();
     post.comments_length++;
     await post.save();
   } catch (error) {
@@ -70,6 +75,8 @@ const postReply = async (req, res, next) => {
   const commentDate = new Date();
   let post;
   let comment;
+  let user;
+  let notification;
 
   const postedComment = new Comment({
     writer: { id: writerId },
@@ -101,18 +108,35 @@ const postReply = async (req, res, next) => {
     return next(error);
   }
 
-  const notification = new Notification({
-    owner: comment.writer.id,
-    user: {
-      id: writerId,
-    },
-    postId: postId,
-    message: "replied your comment.",
-    date: new Date(),
-  });
+  try {
+    user = await User.findById(post.author.id);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Post author doesn't exist.", 500);
+    return next(error);
+  }
+
+  if (post.author.id !== user._id) {
+    notification = new Notification({
+      owner: post.author.id,
+      user: {
+        id: writerId,
+      },
+      postId: postId,
+      message: "commented on your post.",
+      date: new Date(),
+    });
+  }
 
   try {
-    await notification.save();
+    if (post.author.id !== user._id) {
+      user.new_notification++;
+      await user.save();
+      await notification.save();
+    }
     await postedComment.save();
     comment.replies.push(postedComment._id);
     await comment.save();
