@@ -39,6 +39,7 @@ const postComment = async (req, res, next) => {
   });
 
   try {
+    post.author.new_notification++;
     await notification.save();
     await postedComment.save();
     post.comments_length++;
