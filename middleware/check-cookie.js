@@ -1,13 +1,12 @@
 const HttpError = require("../models/http-error");
-
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   const { cookies } = req;
-  const jwt = cookies.refreshToken;
+  const refreshToken = cookies.refreshToken;
 
   try {
-    if (!jwt) {
+    if (!refreshToken) {
       throw new HttpError("Authentication failed!", 403);
     }
 

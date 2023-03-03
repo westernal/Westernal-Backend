@@ -18,21 +18,17 @@ const notificationSocket = require("./sockets/notification-socket");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://www.westernal.net", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join("uploads")));
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
-  next();
-});
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);

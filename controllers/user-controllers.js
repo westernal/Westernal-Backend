@@ -9,6 +9,7 @@ const fs = require("fs");
 var nodemailer = require("nodemailer");
 const passwords = require("../security");
 const Comment = require("../models/comment.js");
+const { SECRET_KEY } = require("../security");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -319,18 +320,22 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  let token;
+  let accessToken;
+  let refreshToken;
 
   try {
-    token = jwt.sign(
+    accessToken = jwt.sign(
       { userId: existingUser.id, username: existingUser.username },
-      "secret_key"
+      SECRET_KEY
     );
+    refreshToken = jwt.sign({}, SECRET_KEY);
   } catch (error) {
     return next(error);
   }
   const options = {
     httpOnly: true,
+    sameSite: "none",
+    secure: false,
   };
 
   try {
@@ -340,8 +345,8 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.cookie("token", token, options).json({
-    token: token,
+  res.cookie("refreshToken", refreshToken, options).json({
+    token: accessToken,
   });
 };
 
