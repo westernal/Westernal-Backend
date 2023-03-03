@@ -9,9 +9,9 @@ router.get("/:pid", postControllers.getPostById);
 
 router.get("/user/:uname", postControllers.getPostByUsername);
 
-router.get("/timeline/:uid", postControllers.getTimelinePost);
-
 router.use(checkCookie);
+
+router.get("/timeline/:uid", postControllers.getTimelinePost);
 
 router.post("/", postControllers.createPosts);
 
