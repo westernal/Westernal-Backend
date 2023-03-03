@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const postControllers = require("../controllers/post-controllers");
-const checkAuth = require("../middleware/check-auth");
+const checkCookie = require("../middleware/check-cookie");
 
 router.get("/:pid", postControllers.getPostById);
 
@@ -11,7 +11,7 @@ router.get("/user/:uname", postControllers.getPostByUsername);
 
 router.get("/timeline/:uid", postControllers.getTimelinePost);
 
-router.use(checkAuth);
+router.use(checkCookie);
 
 router.post("/", postControllers.createPosts);
 

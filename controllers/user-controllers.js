@@ -9,7 +9,7 @@ const fs = require("fs");
 var nodemailer = require("nodemailer");
 const passwords = require("../security");
 const Comment = require("../models/comment.js");
-const { SECRET_KEY } = require("../security");
+const { secretKey } = require("../security");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -129,14 +129,10 @@ const editUser = async (req, res, next) => {
   let token;
 
   try {
-    token = jwt.sign({ userId: userId, username: username }, SECRET_KEY);
+    token = jwt.sign({ userId: userId, username: username }, secretKey);
   } catch (error) {
     return next(error);
   }
-
-  const options = {
-    httpOnly: true,
-  };
 
   try {
     user = User.findByIdAndUpdate(
@@ -150,11 +146,7 @@ const editUser = async (req, res, next) => {
       function (err, doc) {
         if (err) {
           return res.send(500, { error: err });
-        } else
-          return res
-            .cookie("token", token, options)
-            .status(200)
-            .json({ token: token });
+        } else return res.status(200).json({ token: token });
       }
     );
   } catch (error) {
@@ -262,9 +254,9 @@ const signup = async (req, res, next) => {
   try {
     accessToken = jwt.sign(
       { userId: existingUser.id, username: existingUser.username },
-      SECRET_KEY
+      secretKey
     );
-    refreshToken = jwt.sign({}, SECRET_KEY);
+    refreshToken = jwt.sign({}, secretKey);
   } catch (error) {
     return next(error);
   }
@@ -281,7 +273,8 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  res.cookie("refreshToken", refreshToken, options).status(201).json({
+  res.cookie("refreshToken", refreshToken, options);
+  res.status(201).json({
     token: accessToken,
   });
 };
@@ -332,9 +325,9 @@ const login = async (req, res, next) => {
   try {
     accessToken = jwt.sign(
       { userId: existingUser.id, username: existingUser.username },
-      SECRET_KEY
+      secretKey
     );
-    refreshToken = jwt.sign({}, SECRET_KEY);
+    refreshToken = jwt.sign({}, secretKey);
   } catch (error) {
     return next(error);
   }
@@ -352,7 +345,8 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.cookie("refreshToken", refreshToken, options).json({
+  res.cookie("refreshToken", refreshToken, options);
+  res.json({
     token: accessToken,
   });
 };
@@ -376,7 +370,7 @@ const resetPassword = async (req, res, next) => {
   let token;
 
   try {
-    token = jwt.sign({ userId: user._id }, "secret_key", {
+    token = jwt.sign({ userId: user._id }, secretKey, {
       expiresIn: "1h",
     });
   } catch (error) {
@@ -456,9 +450,9 @@ const googleLogin = async (req, res, next) => {
   try {
     accessToken = jwt.sign(
       { userId: existingUser.id, username: existingUser.username },
-      SECRET_KEY
+      secretKey
     );
-    refreshToken = jwt.sign({}, SECRET_KEY);
+    refreshToken = jwt.sign({}, secretKey);
   } catch (error) {
     return next(error);
   }
@@ -469,7 +463,8 @@ const googleLogin = async (req, res, next) => {
     secure: false,
   };
 
-  res.cookie("refreshToken", refreshToken, options).json({
+  res.cookie("refreshToken", refreshToken, options);
+  res.json({
     token: accessToken,
   });
 };

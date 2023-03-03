@@ -1,6 +1,6 @@
 const HttpError = require("../models/http-error");
 const jwt = require("jsonwebtoken");
-import { SECRET_KEY } from "../security";
+const security = require("../security");
 
 module.exports = (req, res, next) => {
   if (req.method === "OPTIONS") {
@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
       throw new HttpError("Token is not valid!", 401);
     }
 
-    const decodedToken = jwt.verify(token, SECRET_KEY);
+    const decodedToken = jwt.verify(token, security.secretKey);
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (error) {
