@@ -129,7 +129,7 @@ const editUser = async (req, res, next) => {
   let token;
 
   try {
-    token = jwt.sign({ userId: userId, username: username }, "secret_key");
+    token = jwt.sign({ userId: userId, username: username }, SECRET_KEY);
   } catch (error) {
     return next(error);
   }
@@ -256,16 +256,24 @@ const signup = async (req, res, next) => {
     bio: "",
   });
 
-  let token;
+  let accessToken;
+  let refreshToken;
 
   try {
-    token = jwt.sign(
-      { userId: createdUser.id, username: createdUser.username },
-      "secret_key"
+    accessToken = jwt.sign(
+      { userId: existingUser.id, username: existingUser.username },
+      SECRET_KEY
     );
+    refreshToken = jwt.sign({}, SECRET_KEY);
   } catch (error) {
     return next(error);
   }
+
+  const options = {
+    httpOnly: true,
+    sameSite: "none",
+    secure: false,
+  };
 
   try {
     await createdUser.save();
@@ -273,11 +281,9 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  const options = {
-    httpOnly: true,
-  };
-
-  res.cookie("token", token, options).status(201).json({ token: token });
+  res.cookie("refreshToken", refreshToken, options).status(201).json({
+    token: accessToken,
+  });
 };
 
 const login = async (req, res, next) => {
@@ -332,6 +338,7 @@ const login = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
+
   const options = {
     httpOnly: true,
     sameSite: "none",
@@ -443,23 +450,27 @@ const googleLogin = async (req, res, next) => {
     return next(err);
   }
 
-  let token;
+  let accessToken;
+  let refreshToken;
 
   try {
-    token = jwt.sign(
+    accessToken = jwt.sign(
       { userId: existingUser.id, username: existingUser.username },
-      "secret_key"
+      SECRET_KEY
     );
+    refreshToken = jwt.sign({}, SECRET_KEY);
   } catch (error) {
     return next(error);
   }
 
   const options = {
     httpOnly: true,
+    sameSite: "none",
+    secure: false,
   };
 
-  res.cookie("token", token, options).json({
-    token: token,
+  res.cookie("refreshToken", refreshToken, options).json({
+    token: accessToken,
   });
 };
 
