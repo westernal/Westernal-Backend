@@ -264,7 +264,7 @@ const signup = async (req, res, next) => {
   const options = {
     httpOnly: true,
     sameSite: "none",
-    secure: false,
+    secure: true,
   };
 
   try {
@@ -335,7 +335,7 @@ const login = async (req, res, next) => {
   const options = {
     httpOnly: true,
     sameSite: "none",
-    secure: false,
+    secure: true,
   };
 
   try {
@@ -460,7 +460,7 @@ const googleLogin = async (req, res, next) => {
   const options = {
     httpOnly: true,
     sameSite: "none",
-    secure: false,
+    secure: true,
   };
 
   res.cookie("refreshToken", refreshToken, options);

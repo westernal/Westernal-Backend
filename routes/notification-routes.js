@@ -1,15 +1,11 @@
 const express = require("express");
 
 const notificationController = require("../controllers/notification-controllers");
-const checkCookie = require("../middleware/check-cookie");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
-router.get(
-  "/:uid",
-  checkCookie,
-  notificationController.getNotificationsByUserId
-);
+router.get("/:uid", checkAuth, notificationController.getNotificationsByUserId);
 
 router.get("/size/:uid", notificationController.getNotificationsLengthByUserId);
 
