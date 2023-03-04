@@ -10,13 +10,14 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
-      throw new HttpError("Token is not valid!", 401);
+      throw new HttpError("Token is not valid!", 403);
     }
 
     const decodedToken = jwt.verify(token, security.secretKey);
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (error) {
-    return next(error);
+    const err = new HttpError("Token is not valid!", 403);
+    return next(err);
   }
 };
