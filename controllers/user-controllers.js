@@ -253,7 +253,7 @@ const signup = async (req, res, next) => {
 
   try {
     accessToken = jwt.sign(
-      { userId: existingUser.id, username: existingUser.username },
+      { userId: createdUser._id, username: createdUser.username },
       secretKey
     );
     refreshToken = jwt.sign({}, secretKey);
