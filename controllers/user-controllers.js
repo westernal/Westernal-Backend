@@ -299,7 +299,7 @@ const login = async (req, res, next) => {
   if (existingUser.failed_login_attempts > 5) {
     const err = new HttpError(
       "Your account has been banned, change your password to unban it.",
-      403
+      402
     );
     return next(err);
   }
