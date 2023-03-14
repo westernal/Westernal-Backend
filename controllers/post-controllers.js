@@ -394,6 +394,11 @@ const savePost = async (req, res, next) => {
     return next(err);
   }
 
+  if (user.saved_posts.includes(postId)) {
+    const err = new HttpError("Post already saved.", 401);
+    return next(err);
+  }
+
   try {
     user.saved_posts.push(post);
     await user.save();
