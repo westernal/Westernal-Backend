@@ -99,6 +99,11 @@ const editUser = async (req, res, next) => {
   const { username, bio, link } = req.body;
   const userId = req.params.uid;
 
+  if (userId != req.userData.userId) {
+    const err = new HttpError("You can't edit another user.", 422);
+    return next(err);
+  }
+
   let existingUsername;
   let selfUser;
   let image;
@@ -121,7 +126,7 @@ const editUser = async (req, res, next) => {
     image = req.file.path;
   }
 
-  if (existingUsername && existingUsername.username !== selfUser.username) {
+  if (existingUsername && existingUsername.username != selfUser.username) {
     const err = new HttpError("Username already exist!", 422);
     return next(err);
   }
@@ -157,10 +162,13 @@ const editUser = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
   const { password } = req.body;
   const userId = req.params.uid;
-
   let user;
-
   let hashedPassword;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("You can't edit another user.", 422);
+    return next(err);
+  }
 
   try {
     hashedPassword = await bcrypt.hash(password, 12);
@@ -353,7 +361,6 @@ const login = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   const { email } = req.body;
-
   let user;
 
   try {
@@ -472,9 +479,13 @@ const googleLogin = async (req, res, next) => {
 const followUser = async (req, res, next) => {
   const { username } = req.body;
   const userId = req.params.uid;
-
   let followedUser;
   let followingUser;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     followedUser = await User.findOne({ username: username });
@@ -539,9 +550,13 @@ const followUser = async (req, res, next) => {
 const unfollowUser = async (req, res, next) => {
   const { username } = req.body;
   const userId = req.params.uid;
-
   let unfollowedUser;
   let unfollowingUser;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     unfollowedUser = await User.findOne({ username: username });
@@ -582,31 +597,34 @@ const unfollowUser = async (req, res, next) => {
   res.status(200).json({ message: "User unfollowed successfully!" });
 };
 
-const verifyUser = async (req, res, next) => {
-  const userId = req.params.uid;
+// const verifyUser = async (req, res, next) => {
+//   const userId = req.params.uid;
+//   let user;
 
-  let user;
+//   try {
+//     user = await User.findById(userId);
+//   } catch (error) {
+//     return next(error);
+//   }
 
-  try {
-    user = await User.findById(userId);
-  } catch (error) {
-    return next(error);
-  }
+//   try {
+//     user.verified = true;
+//     await user.save();
+//   } catch (error) {
+//     return next(error);
+//   }
 
-  try {
-    user.verified = true;
-    await user.save();
-  } catch (error) {
-    return next(error);
-  }
-
-  res.status(200).json({ user: user });
-};
+//   res.status(200).json({ user: user });
+// };
 
 const clearNotification = async (req, res, next) => {
   const userId = req.params.uid;
-
   let user;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     user = await User.findById(userId);
@@ -626,8 +644,12 @@ const clearNotification = async (req, res, next) => {
 
 const getNewNotifications = async (req, res, next) => {
   const userId = req.params.uid;
-
   let user;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     user = await User.findById(userId);
@@ -660,9 +682,13 @@ const searchUsers = async (req, res, next) => {
 
 const getUserSavedPosts = async (req, res, next) => {
   const userId = req.params.uid;
-
   let user;
   let posts;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     user = await User.findById(userId);
@@ -705,7 +731,7 @@ exports.unfollowUser = unfollowUser;
 exports.editUser = editUser;
 exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
-exports.verifyUser = verifyUser;
+// exports.verifyUser = verifyUser;
 exports.googleLogin = googleLogin;
 exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;

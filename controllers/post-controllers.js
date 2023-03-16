@@ -114,10 +114,14 @@ const getPostByUsername = async (req, res, next) => {
 
 const getTimelinePost = async (req, res, next) => {
   const userId = req.params.uid;
-
   let user;
   let users;
   let posts;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     user = await User.findById(userId);
@@ -168,8 +172,12 @@ const getTimelinePost = async (req, res, next) => {
 
 const createPosts = async (req, res, next) => {
   const { caption, authorID, songURL } = req.body;
-
   const postDate = new Date();
+
+  if (authorID != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   if (!validUrl.isUri(songURL)) {
     const error = new HttpError("URL is not valid!", 422);
@@ -210,13 +218,17 @@ const createPosts = async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   const postId = req.params.pid;
-
   let post;
 
   try {
     post = await Post.findById(postId).populate("author.id");
   } catch (error) {
     return next(error);
+  }
+
+  if (post.author.id != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
   }
 
   try {
@@ -233,7 +245,6 @@ const deletePost = async (req, res, next) => {
 const editPost = async (req, res, next) => {
   const { caption } = req.body;
   const postId = req.params.pid;
-
   let post;
 
   try {
@@ -259,8 +270,12 @@ const likePost = async (req, res, next) => {
   const postId = req.params.pid;
   let post;
   let notification;
-
   const { userId } = req.body;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     post = await Post.findById(postId);
@@ -313,6 +328,11 @@ const unlikePost = async (req, res, next) => {
   let post;
   const { userId } = req.body;
 
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
   try {
     post = await Post.findById(postId);
   } catch (error) {
@@ -339,7 +359,6 @@ const unlikePost = async (req, res, next) => {
 
 const getPostLikes = async (req, res, next) => {
   const postId = req.params.pid;
-
   let post;
   let likes = [];
 
@@ -368,9 +387,13 @@ const getPostLikes = async (req, res, next) => {
 const savePost = async (req, res, next) => {
   const postId = req.params.pid;
   const { userId } = req.body;
-
   let user;
   let post;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     post = await Post.findById(postId);
@@ -412,9 +435,13 @@ const savePost = async (req, res, next) => {
 const unsavePost = async (req, res, next) => {
   const postId = req.params.pid;
   const { userId } = req.body;
-
   let user;
   let post;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     post = await Post.findById(postId);

@@ -36,8 +36,12 @@ const getNotificationsByUserId = async (req, res, next) => {
 
 const getNotificationsLengthByUserId = async (req, res, next) => {
   const userId = req.params.uid;
-
   let size;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   try {
     size = await Notification.count({ owner: userId });

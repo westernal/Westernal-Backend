@@ -12,6 +12,11 @@ const postComment = async (req, res, next) => {
   let user;
   let notification;
 
+  if (writerId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
   const postedComment = new Comment({
     writer: { id: writerId },
     postId: postId,
@@ -76,6 +81,11 @@ const postReply = async (req, res, next) => {
   let comment;
   let user;
   let notification;
+
+  if (writerId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
   const postedComment = new Comment({
     writer: { id: writerId },
@@ -148,7 +158,6 @@ const postReply = async (req, res, next) => {
 
 const getCommentsByPostId = async (req, res, next) => {
   const postId = req.params.pid;
-
   let comments;
 
   try {
@@ -183,7 +192,6 @@ const getCommentsByPostId = async (req, res, next) => {
 
 const getRepliesByCommentId = async (req, res, next) => {
   const commentId = req.params.cid;
-
   let replies;
   let comment;
 
@@ -227,9 +235,7 @@ const getRepliesByCommentId = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   const commentId = req.params.cid;
-
   let comment;
-  let post;
 
   try {
     comment = await Comment.findById(commentId);
@@ -240,6 +246,11 @@ const deleteComment = async (req, res, next) => {
   if (!comment) {
     const error = new HttpError("Comment doesn't exist", 500);
     return next(error);
+  }
+
+  if (comment.writer.id != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
   }
 
   try {
