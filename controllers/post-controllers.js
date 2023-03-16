@@ -226,7 +226,7 @@ const deletePost = async (req, res, next) => {
     return next(error);
   }
 
-  if (post.author.id != req.userData.userId) {
+  if (post.author.id._id != req.userData.userId) {
     const err = new HttpError("Only the user can send the request.", 422);
     return next(err);
   }
