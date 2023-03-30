@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/", usersControllers.getUsers);
 
-router.get("/:uid", usersControllers.getUserById);
+router.get("/user/:uid", usersControllers.getUserById);
 
 router.post("/signup", usersControllers.signup);
 
@@ -49,7 +49,7 @@ router.get(
   usersControllers.getNewNotifications
 );
 
-router.get("/search/:uname", usersControllers.searchUsers);
+router.get("/search", usersControllers.searchUsers);
 
 router.get("/saved-posts/:uid", checkAuth, usersControllers.getUserSavedPosts);
 

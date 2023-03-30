@@ -663,7 +663,7 @@ const getNewNotifications = async (req, res, next) => {
 };
 
 const searchUsers = async (req, res, next) => {
-  const username = req.params.uname;
+  const username = req.query.username;
 
   if (!username) {
     res.status(200).json({ users: [] });
