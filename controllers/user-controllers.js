@@ -597,25 +597,27 @@ const unfollowUser = async (req, res, next) => {
   res.status(200).json({ message: "User unfollowed successfully!" });
 };
 
-// const verifyUser = async (req, res, next) => {
-//   const userId = req.params.uid;
-//   let user;
+const checkSavedPost = async (req, res, next) => {
+  const userId = req.params.uid;
+  const { postId } = req.body;
+  let user;
+  let isSaved = false;
 
-//   try {
-//     user = await User.findById(userId);
-//   } catch (error) {
-//     return next(error);
-//   }
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
 
-//   try {
-//     user.verified = true;
-//     await user.save();
-//   } catch (error) {
-//     return next(error);
-//   }
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
 
-//   res.status(200).json({ user: user });
-// };
+  if (user.saved_posts.includes(postId)) isSaved = true;
+
+  res.status(200).json({ isSaved: isSaved });
+};
 
 const clearNotification = async (req, res, next) => {
   const userId = req.params.uid;
@@ -731,7 +733,7 @@ exports.unfollowUser = unfollowUser;
 exports.editUser = editUser;
 exports.getUserFollowers = getUserFollowers;
 exports.getUserFollowings = getUserFollowings;
-// exports.verifyUser = verifyUser;
+exports.checkSavedPost = checkSavedPost;
 exports.googleLogin = googleLogin;
 exports.resetPassword = resetPassword;
 exports.changePassword = changePassword;

@@ -23,7 +23,7 @@ router.get("/followers/:uname", usersControllers.getUserFollowers);
 
 router.post("/unfollow/:uid", checkAuth, usersControllers.unfollowUser);
 
-// router.post("/verify/:uid", checkAuth, usersControllers.verifyUser);
+router.post("/saved-posts/:uid", checkAuth, usersControllers.checkSavedPost);
 
 router.get("/following/:uname", usersControllers.getUserFollowings);
 
