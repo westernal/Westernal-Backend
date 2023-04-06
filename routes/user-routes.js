@@ -11,6 +11,8 @@ router.get("/", usersControllers.getUsers);
 
 router.get("/user/:uid", usersControllers.getUserById);
 
+router.get("/user/featured", usersControllers.getFeaturedUsers);
+
 router.post("/signup", usersControllers.signup);
 
 router.post("/login", usersControllers.login);

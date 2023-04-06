@@ -43,6 +43,18 @@ const getUserById = async (req, res, next) => {
   res.status(200).json({ user: user });
 };
 
+const getFeaturedUsers = async (req, res, next) => {
+  let users;
+
+  try {
+    users = await User.find({ verified: true });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ users: users });
+};
+
 const getUserFollowers = async (req, res, next) => {
   const username = req.params.uname;
 
@@ -741,3 +753,4 @@ exports.clearNotification = clearNotification;
 exports.getNewNotifications = getNewNotifications;
 exports.searchUsers = searchUsers;
 exports.getUserSavedPosts = getUserSavedPosts;
+exports.getFeaturedUsers = getFeaturedUsers;
