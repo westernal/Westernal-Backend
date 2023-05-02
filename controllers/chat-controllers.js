@@ -55,19 +55,29 @@ const getUserChats = async (req, res, next) => {
   const userId = req.params.uid;
   let chats;
 
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
   try {
-    chats = Chat.find({ members: { $in: [userId] } });
+    chats = await Chat.find({ members: { $in: [userId] } });
   } catch (error) {
     return next(error);
   }
 
+  if (!chats) {
+    chats = [];
+  }
+
   try {
     chats = await Promise.all(
-      chats.members.map(async (member) => {
-        const { username, image, verified } = await User.findById(
-          member.user.id
-        );
-        return { username, image, verified };
+      chats.map(async (chat) => {
+        chat.members.map(async (member) => {
+          const { username, image, verified } = await User.findById(member);
+          return { username, image, verified };
+        });
+        return chat;
       })
     );
   } catch (error) {
