@@ -11,4 +11,6 @@ router.post("/create", chatController.createChat);
 
 router.get("/chat/:uid", chatController.getUserChats);
 
+router.post("/message/send", chatController.sendMessage);
+
 module.exports = router;

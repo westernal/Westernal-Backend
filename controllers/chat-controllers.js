@@ -64,5 +64,18 @@ const getUserChats = async (req, res, next) => {
   res.status(200).json({ chats: chats });
 };
 
-exports.getUserChats = getUserChats;
+const sendMessage = async (req, res, next) => {
+  const newMessage = new Message(req.body);
+
+  try {
+    await newMessage.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Message sent." });
+};
+
 exports.createChat = createChat;
+exports.getUserChats = getUserChats;
+exports.sendMessage = sendMessage;
