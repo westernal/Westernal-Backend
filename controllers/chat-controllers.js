@@ -61,6 +61,19 @@ const getUserChats = async (req, res, next) => {
     return next(error);
   }
 
+  try {
+    chats = await Promise.all(
+      chats.members.map(async (member) => {
+        const { username, image, verified } = await User.findById(
+          member.user.id
+        );
+        return { username, image, verified };
+      })
+    );
+  } catch (error) {
+    return next(error);
+  }
+
   res.status(200).json({ chats: chats });
 };
 
@@ -82,6 +95,22 @@ const getChatById = async (req, res, next) => {
 
   try {
     messages = Message.find({ chatId: chatId });
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    messages = await Promise.all(
+      messages.map(async (message) => {
+        const { username, image, verified } = await User.findById(
+          message.sender.id
+        );
+        message.sender.username = username;
+        message.sender.image = image;
+        message.sender.verified = verified;
+        return message;
+      })
+    );
   } catch (error) {
     return next(error);
   }
