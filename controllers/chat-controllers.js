@@ -76,6 +76,20 @@ const sendMessage = async (req, res, next) => {
   res.status(200).json({ message: "Message sent." });
 };
 
+const getChatById = async (req, res, next) => {
+  const chatId = req.params.cid;
+  let messages;
+
+  try {
+    messages = Message.find({ chatId: chatId });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ messages: messages });
+};
+
 exports.createChat = createChat;
 exports.getUserChats = getUserChats;
 exports.sendMessage = sendMessage;
+exports.getChatById = getChatById;

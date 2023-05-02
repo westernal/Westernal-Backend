@@ -13,4 +13,6 @@ router.get("/chat/:uid", chatController.getUserChats);
 
 router.post("/message/send", chatController.sendMessage);
 
+router.get("/chat/messages/:cid", chatController.getChatById);
+
 module.exports = router;
