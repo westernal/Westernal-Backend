@@ -7,6 +7,20 @@ const createChat = async (req, res, next) => {
   const { receiverId, senderId } = req.body;
 
   let receiver;
+  let existingChat;
+
+  try {
+    existingChat = Chat.find({
+      members: { $in: [receiverId, senderId] },
+    });
+  } catch (error) {
+    return next(error);
+  }
+
+  if (existingChat) {
+    const err = new HttpError("Chat already exists.", 422);
+    return next(err);
+  }
 
   if (senderId != req.userData.userId) {
     const err = new HttpError("Only the user can send the request.", 422);
