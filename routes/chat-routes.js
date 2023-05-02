@@ -6,6 +6,9 @@ const checkAuth = require("../middleware/check-auth");
 const router = express.Router();
 
 router.use(checkAuth);
+
 router.post("/create", chatController.createChat);
+
+router.get("/chat/:uid", chatController.getUserChats);
 
 module.exports = router;

@@ -51,4 +51,18 @@ const createChat = async (req, res, next) => {
   res.status(200).json({ message: "Chat created." });
 };
 
+const getUserChats = async (req, res, next) => {
+  const userId = req.params.uid;
+  let chats;
+
+  try {
+    chats = Chat.find({ members: { $in: [userId] } });
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ chats: chats });
+};
+
+exports.getUserChats = getUserChats;
 exports.createChat = createChat;
