@@ -48,7 +48,7 @@ const createChat = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ message: "Chat created." });
+  res.status(200).json({ chatId: newChat._id });
 };
 
 const getUserChats = async (req, res, next) => {
