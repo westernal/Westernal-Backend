@@ -16,7 +16,7 @@ const createChat = async (req, res, next) => {
 
   try {
     existingChat = await Chat.findOne({
-      members: { $in: [receiverId, senderId] },
+      members: { $eq: [receiverId, senderId] },
     });
   } catch (error) {
     return next(error);
