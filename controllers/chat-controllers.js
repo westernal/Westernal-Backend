@@ -9,8 +9,13 @@ const createChat = async (req, res, next) => {
   let receiver;
   let existingChat;
 
+  if (senderId === receiverId) {
+    const err = new HttpError("You can't chat with yourself.", 422);
+    return next(err);
+  }
+
   try {
-    existingChat = Chat.find({
+    existingChat = await Chat.find({
       members: { $in: [receiverId, senderId] },
     });
   } catch (error) {
