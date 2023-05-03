@@ -15,7 +15,7 @@ const createChat = async (req, res, next) => {
   }
 
   try {
-    existingChat = await Chat.find({
+    existingChat = await Chat.findOne({
       members: { $in: [receiverId, senderId] },
     });
   } catch (error) {
@@ -23,7 +23,7 @@ const createChat = async (req, res, next) => {
   }
 
   if (existingChat) {
-    const err = new HttpError("Chat already exists.", 422);
+    const err = new HttpError(`Chat already exists.`, 422);
     return next(err);
   }
 
