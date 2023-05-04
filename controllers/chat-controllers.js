@@ -78,10 +78,12 @@ const getUserChats = async (req, res, next) => {
   try {
     chats = await Promise.all(
       chats.map(async (chat) => {
-        chat.members.map(async (member) => {
-          const { username, image, verified } = await User.findById(member);
-          return { username, image, verified };
-        });
+        chat.members = await Promise.all(
+          chat.members.map(async (member) => {
+            const { username, image, verified } = await User.findById(member);
+            return { username, image, verified };
+          })
+        );
         return chat;
       })
     );
