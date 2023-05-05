@@ -111,7 +111,7 @@ const getChatById = async (req, res, next) => {
   let messages;
 
   try {
-    messages = Message.find({ chatId: chatId });
+    messages = await Message.find({ chatId: chatId });
   } catch (error) {
     return next(error);
   }
