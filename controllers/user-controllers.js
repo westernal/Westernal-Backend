@@ -681,8 +681,8 @@ const resetMessages = async (req, res, next) => {
   }
 
   try {
-    chat.new_message = 0;
     user.new_message = user.new_message - chat.new_message;
+    chat.new_message = 0;
     await user.save();
     await chat.save();
   } catch (error) {
