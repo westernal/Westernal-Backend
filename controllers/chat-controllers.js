@@ -123,7 +123,7 @@ const getChatById = async (req, res, next) => {
           message.sender.id
         );
         message.sender.username = username;
-        message.sender.image = image;
+        message.sender.avatar = image;
         message.sender.verified = verified;
         return message;
       })
