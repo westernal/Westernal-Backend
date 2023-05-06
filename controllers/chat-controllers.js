@@ -96,9 +96,37 @@ const getUserChats = async (req, res, next) => {
 
 const sendMessage = async (req, res, next) => {
   const newMessage = new Message(req.body);
+  const { chatId, sender } = req.body;
+  let chat;
+  let receiverId;
+  let receiver;
+
+  if (sender.id != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
+  try {
+    chat = await Chat.findById(chatId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    chat.members.forEach((member) => {
+      if (member !== sender.id) {
+        receiverId = member;
+      }
+    });
+    receiver = await User.findById(receiverId);
+  } catch (error) {
+    return next(error);
+  }
 
   try {
     await newMessage.save();
+    receiver.new_message++;
+    await receiver.save();
   } catch (error) {
     return next(error);
   }

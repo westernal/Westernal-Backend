@@ -45,6 +45,8 @@ router.post(
   usersControllers.clearNotification
 );
 
+router.post("/messages/reset/:uid", checkAuth, usersControllers.resetMessages);
+
 router.get(
   "/notification/:uid",
   checkAuth,

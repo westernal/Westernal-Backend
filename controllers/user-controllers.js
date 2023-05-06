@@ -656,6 +656,31 @@ const clearNotification = async (req, res, next) => {
   res.status(200).json({ message: "Notification cleared." });
 };
 
+const resetMessages = async (req, res, next) => {
+  const userId = req.params.uid;
+  let user;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    user.new_message = 0;
+    await user.save();
+  } catch (error) {
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Messages reset." });
+};
+
 const getNewNotifications = async (req, res, next) => {
   const userId = req.params.uid;
   let user;
@@ -754,3 +779,4 @@ exports.getNewNotifications = getNewNotifications;
 exports.searchUsers = searchUsers;
 exports.getUserSavedPosts = getUserSavedPosts;
 exports.getFeaturedUsers = getFeaturedUsers;
+exports.resetMessages = resetMessages;
