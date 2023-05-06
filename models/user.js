@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
   verified: { type: Boolean, default: false },
   new_notification: { type: Number, default: 0 },
+  new_message: { type: Number, default: 0 },
   saved_posts: [{ type: mongoose.Types.ObjectId, required: true, ref: "Post" }],
   personal_link: { type: String },
   failed_login_attempts: { type: Number, default: 0 },
