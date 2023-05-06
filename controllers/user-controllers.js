@@ -10,6 +10,7 @@ var nodemailer = require("nodemailer");
 const passwords = require("../security");
 const Comment = require("../models/comment.js");
 const { secretKey } = require("../security");
+const Chat = require("../models/chat");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -658,11 +659,19 @@ const clearNotification = async (req, res, next) => {
 
 const resetMessages = async (req, res, next) => {
   const userId = req.params.uid;
+  const { chatId } = req.body;
   let user;
+  let chat;
 
   if (userId != req.userData.userId) {
     const err = new HttpError("Only the user can send the request.", 422);
     return next(err);
+  }
+
+  try {
+    chat = await Chat.findById(chatId);
+  } catch (error) {
+    return next(error);
   }
 
   try {
@@ -672,8 +681,10 @@ const resetMessages = async (req, res, next) => {
   }
 
   try {
-    user.new_message = 0;
+    chat.new_message = 0;
+    user.new_message = user.new_message - chat.new_message;
     await user.save();
+    await chat.save();
   } catch (error) {
     return next(error);
   }
