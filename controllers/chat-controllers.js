@@ -45,6 +45,10 @@ const createChat = async (req, res, next) => {
 
   const newChat = new Chat({
     members: [receiverId, senderId],
+    new_message: [
+      { id: senderId, count: 0 },
+      { id: receiverId, count: 0 },
+    ],
   });
 
   try {
@@ -84,6 +88,11 @@ const getUserChats = async (req, res, next) => {
             return { username, image, verified };
           })
         );
+        chat.new_message.forEach((message) => {
+          if (message.id === userId) {
+            chat.new_message = message.count;
+          }
+        });
         return chat;
       })
     );
@@ -124,10 +133,21 @@ const sendMessage = async (req, res, next) => {
   }
 
   try {
-    await newMessage.save();
+    chat.new_message = chat.new_message.map((message) => {
+      if (message.id === receiverId) {
+        message.count++;
+      }
+      return message;
+    });
     receiver.new_message++;
+  } catch (error) {
+    return next(error);
+  }
+
+  try {
+    await newMessage.save();
     await receiver.save();
-    chat.new_message++;
+    chat.markModified("new_message");
     await chat.save();
   } catch (error) {
     return next(error);

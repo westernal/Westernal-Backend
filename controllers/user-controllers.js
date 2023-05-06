@@ -662,6 +662,7 @@ const resetMessages = async (req, res, next) => {
   const { chatId } = req.body;
   let user;
   let chat;
+  let count = 0;
 
   if (userId != req.userData.userId) {
     const err = new HttpError("Only the user can send the request.", 422);
@@ -681,9 +682,19 @@ const resetMessages = async (req, res, next) => {
   }
 
   try {
-    user.new_message = user.new_message - chat.new_message;
-    chat.new_message = 0;
+    chat.new_message = chat.new_message.map((message) => {
+      if (message.id === userId) {
+        count = message.count;
+        message.count = 0;
+      }
+      return message;
+    });
+  } catch (error) {}
+
+  try {
+    user.new_message = user.new_message - count;
     await user.save();
+    chat.markModified("new_message");
     await chat.save();
   } catch (error) {
     return next(error);
