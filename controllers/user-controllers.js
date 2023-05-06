@@ -712,6 +712,26 @@ const getNewNotifications = async (req, res, next) => {
   } else res.status(200).json({ notifications: 0 });
 };
 
+const getNewMessages = async (req, res, next) => {
+  const userId = req.params.uid;
+  let user;
+
+  if (userId != req.userData.userId) {
+    const err = new HttpError("Only the user can send the request.", 422);
+    return next(err);
+  }
+
+  try {
+    user = await User.findById(userId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (user.new_message) {
+    res.status(200).json({ messages: user.new_message });
+  } else res.status(200).json({ messages: 0 });
+};
+
 const searchUsers = async (req, res, next) => {
   const username = req.query.username;
 
@@ -791,3 +811,4 @@ exports.searchUsers = searchUsers;
 exports.getUserSavedPosts = getUserSavedPosts;
 exports.getFeaturedUsers = getFeaturedUsers;
 exports.resetMessages = resetMessages;
+exports.getNewMessages = getNewMessages;

@@ -53,6 +53,8 @@ router.get(
   usersControllers.getNewNotifications
 );
 
+router.get("/messages/:uid", checkAuth, usersControllers.getNewMessages);
+
 router.get("/search", usersControllers.searchUsers);
 
 router.get("/saved-posts/:uid", checkAuth, usersControllers.getUserSavedPosts);
