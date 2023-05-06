@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const io = require("socket.io");
 
 const postsRoutes = require("./routes/post-routes");
 const usersRoutes = require("./routes/user-routes");
@@ -14,7 +15,9 @@ const commentRoutes = require("./routes/comment-routes");
 const chatRoutes = require("./routes/chat-routes");
 const HttpError = require("./models/http-error");
 const passwords = require("./security");
-const notificationSocket = require("./sockets/notification-socket");
+const chatSocket = require("./sockets/chat-socket");
+
+chatSocket(io);
 
 const app = express();
 const http = require("http");
