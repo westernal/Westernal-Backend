@@ -165,7 +165,23 @@ const getChatById = async (req, res, next) => {
   res.status(200).json({ messages: messages });
 };
 
+const getNewMessages = async (req, res, next) => {
+  const chatId = req.params.cid;
+  let chat;
+
+  try {
+    chat = await Chat.findById(chatId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if (chat.new_message) {
+    res.status(200).json({ messages: chat.new_message });
+  } else res.status(200).json({ messages: 0 });
+};
+
 exports.createChat = createChat;
 exports.getUserChats = getUserChats;
 exports.sendMessage = sendMessage;
 exports.getChatById = getChatById;
+exports.getNewMessages = getNewMessages;
