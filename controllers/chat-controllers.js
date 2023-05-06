@@ -141,7 +141,9 @@ const getChatById = async (req, res, next) => {
   let messages;
 
   try {
-    messages = await Message.find({ chatId: chatId }).sort({ date: -1 });
+    messages = await Message.find({ chatId: chatId })
+      .limit(50)
+      .sort({ createdAt: -1 });
   } catch (error) {
     return next(error);
   }
