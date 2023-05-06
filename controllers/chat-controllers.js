@@ -127,6 +127,8 @@ const sendMessage = async (req, res, next) => {
     await newMessage.save();
     receiver.new_message++;
     await receiver.save();
+    chat.new_message++;
+    await chat.save();
   } catch (error) {
     return next(error);
   }
