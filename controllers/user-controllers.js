@@ -693,6 +693,9 @@ const resetMessages = async (req, res, next) => {
 
   try {
     user.new_message = user.new_message - count;
+    if (user.new_message < 0) {
+      user.new_message = 0;
+    }
     await user.save();
     chat.markModified("new_message");
     await chat.save();
