@@ -153,7 +153,7 @@ const sendMessage = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ message: "Message sent." });
+  res.status(200).json({ receiverId: receiverId });
 };
 
 const getChatById = async (req, res, next) => {

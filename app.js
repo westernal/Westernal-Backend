@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const io = require("socket.io");
+const { Server } = require("socket.io");
 
 const postsRoutes = require("./routes/post-routes");
 const usersRoutes = require("./routes/user-routes");
@@ -17,12 +17,12 @@ const HttpError = require("./models/http-error");
 const passwords = require("./security");
 const chatSocket = require("./sockets/chat-socket");
 
-chatSocket(io);
-
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
+const io = new Server(server, {});
 
+chatSocket(io);
 app.use(bodyParser.json());
 app.use(
   cors({
