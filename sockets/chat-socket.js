@@ -33,6 +33,7 @@ const chatSocket = (io) => {
           verified: sender.verified,
         },
         text: text,
+        createdAt: Date.now(),
       };
 
       io.to(user.socketId).emit("getMessage", message);

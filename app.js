@@ -15,12 +15,17 @@ const commentRoutes = require("./routes/comment-routes");
 const chatRoutes = require("./routes/chat-routes");
 const HttpError = require("./models/http-error");
 const passwords = require("./security");
-const chatSocket = require("./sockets/chat-socket");
+const { chatSocket } = require("./sockets/chat-socket");
 
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const io = new Server(server, {});
+const io = new Server(server, {
+  cors: {
+    origin: "https://www.westernal.net/",
+    methods: ["GET", "POST"],
+  },
+});
 
 chatSocket(io);
 app.use(bodyParser.json());
