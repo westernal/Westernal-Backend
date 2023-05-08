@@ -23,8 +23,7 @@ const createChat = async (req, res, next) => {
   }
 
   if (existingChat) {
-    const err = new HttpError(`Chat already exists.`, 422);
-    return next(err);
+    return res.status(200).json({ chatId: existingChat._id });
   }
 
   if (senderId != req.userData.userId) {
